@@ -13,6 +13,7 @@ class Demo extends Base {
         $login = $_REQUEST['login'];
         $pwd   = $_REQUEST['pwd'];
 
+        // 로그인 된 상태면 로그아웃 우선
         if (is_user_logged_in()) {
             wp_logout();
         }
@@ -22,6 +23,7 @@ class Demo extends Base {
             'remember'      => true
         ], false);
 
+        // 로그인 실패 = \WP_Error
         $success = is_wp_error($user) ? false : true;
         if (! $success) {
             die(json_encode([
@@ -40,6 +42,7 @@ class Demo extends Base {
         $login = $_REQUEST['login'];
         $pwd   = $_REQUEST['pwd'];
 
+        // 기존 유저와 겹칠 경우
         if (get_user_by('login', $login)) {
             die(json_encode([
                 'success' => false
