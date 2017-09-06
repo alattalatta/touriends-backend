@@ -8,9 +8,7 @@ class Main {
 		add_action('init', function() {
 			Post\DemoAlpha::init();
 			Post\DemoBeta::init();
-		});
-		add_action('rest_api_init', function() {
-			REST\Demo::init();
+            AJAX\Demo::init();
 		});
 	}
 }
