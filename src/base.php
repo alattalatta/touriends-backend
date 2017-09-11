@@ -65,8 +65,8 @@ class Demo extends Base {
         $meta_value = $_REQUEST['intro_s'];
         add_user_meta( $uid, $meta_key, $meta_value, $unique );
 
-        $meta_key = 'user_natation';
-        $meta_value = $_REQUEST['natation'];
+        $meta_key = 'user_nation';
+        $meta_value = $_REQUEST['nation'];
         add_user_meta( $uid, $meta_key, $meta_value, $unique );
 
         $meta_key = 'user_gender';
