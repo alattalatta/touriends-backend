@@ -58,6 +58,22 @@ class Member extends Base {
         );
         $user_id = wp_insert_user( $userdata ) ;
 
+        // 이미지 업데이트 (프사업로드)
+        // 이미지 업로드는 워드프레스 기본 업로더를 사용함
+        // 해상도도 알아서 나눠준다고?
+        $attachment_id = media_handle_upload('image', 0);
+        if (isset($_FILES['image']) && is_wp_error($attachment_id)) {
+            die(json_encode([
+                'success' => false,
+                'error' => 'upload_failed', // 프론트에서 에러 핸들링 할 수 있도록 키워드로 넘겨줌
+                'message' => $attachment_id->get_error_message()
+            ]));
+        }
+        else {
+            // 유저 메타에 외래키로 사진 ID 넣기
+            update_user_meta($user_id, 'image', $attachment_id);
+        }
+
         $meta_value = $_POST['birth'];
         update_user_meta($user_id, 'user_birth', $meta_value);
         $meta_value = $_POST['image'];
