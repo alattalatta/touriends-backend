@@ -9,6 +9,7 @@ class Main {
 			Post\DemoAlpha::init();
 			Post\DemoBeta::init();
             AJAX\Demo::init();
+	    AJAX\Member::init();
 		});
 	}
 }
