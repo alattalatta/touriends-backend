@@ -34,7 +34,7 @@ class Member extends Base {
     public static function register() {
         $login = $_POST['login'];
         $pwd   = $_POST['pwd'];
-        $email   = $_POST['email'];
+        $email   = $_POST['login'];
         $website   = $_POST['website'];
         // 기존 유저와 겹칠 경우
         if (get_user_by('login', $login)) {
@@ -45,7 +45,7 @@ class Member extends Base {
         $userdata = array(
             'user_login'  =>  $login,
             'user_pass'   =>  $pwd,  // When creating an user, `user_pass` is expected.
-            'user_email'  =>  $email,  // When creating an user, `user_pass` is expected.
+            'user_email'  =>  $login,  // When creating an user, `user_pass` is expected.
             'user_url'    =>  $website,
         );
         $user_id = wp_insert_user( $userdata ) ;
