@@ -40,7 +40,7 @@ class Member extends Base {
     * 회원등록
     */
     public static function register() {
-        $login    = $_POST['login'];
+        $name    = $_POST['name'];
         $pwd      = $_POST['pwd'];
         $email    = $_POST['email'];
         $website  = $_POST['website'];
@@ -51,7 +51,7 @@ class Member extends Base {
             ]));
         }
         $userdata = array(
-            'user_login'  =>  $login,
+            'user_login'  =>  $email,
             'user_pass'   =>  $pwd,  // When creating an user, `user_pass` is expected.
             'user_email'  =>  $email,  // When creating an user, `user_pass` is expected.
             'user_url'    =>  $website
