@@ -20,7 +20,7 @@ class Member extends Base {
         }
         $user = wp_signon([
             'user_login'    => $login,
-            'user_pass' => $pwd,
+            'user_pass'     => $pwd,
             'remember'      => true
         ], false);
         // 로그인 실패 = \WP_Error
@@ -42,7 +42,7 @@ class Member extends Base {
     public static function register() {
         $login    = $_POST['login'];
         $pwd      = $_POST['pwd'];
-        $email    = $_POST['login'];
+        $email    = $_POST['email'];
         $website  = $_POST['website'];
         // 기존 유저와 겹칠 경우
         if (get_user_by('login', $login)) {
@@ -53,7 +53,7 @@ class Member extends Base {
         $userdata = array(
             'user_login'  =>  $login,
             'user_pass'   =>  $pwd,  // When creating an user, `user_pass` is expected.
-            'user_email'  =>  $login,  // When creating an user, `user_pass` is expected.
+            'user_email'  =>  $email,  // When creating an user, `user_pass` is expected.
             'user_url'    =>  $website
         );
         $user_id = wp_insert_user( $userdata ) ;
