@@ -5,7 +5,12 @@ class Member extends Base {
         parent::registerAction('login', [__CLASS__, 'login']);
         parent::registerAction('register', [__CLASS__, 'register']);
         parent::registerAction('logout', [__CLASS__, 'logout']);
+        parent::registerAction('intro', [__CLASS__, 'intro']);
     }
+    
+    /**
+    * 로그인
+    */
     public static function login() {
         $login = $_POST['login'];
         $pwd   = $_POST['pwd'];
@@ -31,11 +36,14 @@ class Member extends Base {
             'uid'     => $user->ID
         ]));
     }
+    /**
+    * 회원등록
+    */
     public static function register() {
-        $login = $_POST['login'];
-        $pwd   = $_POST['pwd'];
-        $email   = $_POST['login'];
-        $website   = $_POST['website'];
+        $login    = $_POST['login'];
+        $pwd      = $_POST['pwd'];
+        $email    = $_POST['login'];
+        $website  = $_POST['website'];
         // 기존 유저와 겹칠 경우
         if (get_user_by('login', $login)) {
             die(json_encode([
@@ -61,6 +69,12 @@ class Member extends Base {
         die(json_encode([
             'success' => true
         ]));
+    }
+    /**
+    * 자기소개
+    */
+    public static function intro() {
+       $intro = $_POST['intro'];
     }
     /**
     * 로그아웃
