@@ -15,7 +15,7 @@ class Member extends Base {
         }
         $user = wp_signon([
             'user_login'    => $login,
-            'user_password' => $pwd,
+            'user_pass' => $pwd,
             'remember'      => true
         ], false);
         // 로그인 실패 = \WP_Error
@@ -46,10 +46,10 @@ class Member extends Base {
             'user_login'  =>  $login,
             'user_pass'   =>  $pwd,  // When creating an user, `user_pass` is expected.
             'user_email'  =>  $login,  // When creating an user, `user_pass` is expected.
-            'user_url'    =>  $website,
+            'user_url'    =>  $website
         );
         $user_id = wp_insert_user( $userdata ) ;
-        $uid = get_user($uid);
+
         $meta_value = $_POST['birth'];
         update_user_meta($user_id, 'user_birth', $meta_value);
         $meta_value = $_POST['image'];
