@@ -20,7 +20,7 @@ class Member extends Base {
         }
         $user = wp_signon([
             'user_login'    => $login,
-            'user_pass'     => $pwd,
+            'user_password' => $pwd,
             'remember'      => true
         ], false);
         // 로그인 실패 = \WP_Error
@@ -32,7 +32,7 @@ class Member extends Base {
             ]));
         }
         die(json_encode([
-            'success' => $success,
+            'success' => true,
             'uid'     => $user->ID
         ]));
     }
