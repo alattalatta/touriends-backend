@@ -24,11 +24,11 @@ class Member extends Base {
             'remember'      => true
         ], false);
         // 로그인 실패 = \WP_Error
-        $success = is_wp_error($user) ? false : true;
-        if (! $success) {
+        if (is_wp_error($user)) {
             die(json_encode([
                 'success' => false,
-                'message' => '로그인 실패!'
+                'error' => 'login_failed', 
+                'message' => $user->get_error_message()
             ]));
         }
         die(json_encode([
