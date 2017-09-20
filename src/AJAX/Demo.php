@@ -30,7 +30,7 @@ class Demo extends Base {
         ], false);
 
         // 로그인 실패 = \WP_Error
-        if (is_wp_error($user)) {
+        if (!is_wp_error($user)) {
             die(json_encode([
                 'success' => false,
                 'error' => 'login_failed', // 프론트에서 에러 핸들링 할 수 있도록 키워드로 넘겨줌
