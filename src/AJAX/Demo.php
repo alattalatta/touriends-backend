@@ -50,7 +50,7 @@ class Demo extends Base {
      * @uses $_FILES: image
      */
     public static function register() {
-        // $_FILES['image']는 media_handle_upload에서 알아서 뽑아서 사용
+        // $_FILES['image']는 media_handle_upload 에서 알아서 뽑아서 사용
         $login = $_POST['login'];
         $pwd   = $_POST['pwd'];
 
@@ -67,20 +67,6 @@ class Demo extends Base {
             'user_login' => $login
         ]);
 
-        // 이미지 업로드는 워드프레스 기본 업로더를 사용함
-        // 해상도도 알아서 나눠준다고?
-        $attachment_id = media_handle_upload('image', 0);
-        if (isset($_FILES['image']) && is_wp_error($attachment_id)) {
-            die(json_encode([
-                'success' => false,
-                'error' => 'upload_failed', // 프론트에서 에러 핸들링 할 수 있도록 키워드로 넘겨줌
-                'message' => $attachment_id->get_error_message()
-            ]));
-        }
-        else {
-            // 유저 메타에 외래키로 사진 ID 넣기
-            update_user_meta($user_id, 'image', $attachment_id);
-        }
 
         die(json_encode([
             'success' => true
