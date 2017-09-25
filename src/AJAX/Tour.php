@@ -14,30 +14,31 @@ class Tour extends Base {
       $fromDate = $_POST['fromDate']; // MM/DD/YYYY
       $toDate   = $_POST['toDate']; // MM/DD/YYYY
       $user_id  = get_current_user_id();
-
       add_user_meta($user_id, 'fromDate', $fromDate );
       add_user_meta($user_id, 'toDate', $toDate );
     }
-
+    /**
+    * 테마선택
+    */
     public static function theme() {
-        $post_title = $_POST['post_title'];
+        $theme = $_POST['theme'];
         $user_id  = get_current_user_id();
-
-        add_user_meta($user_id, 'fromDate', $fromDate );
-        add_user_meta($user_id, 'toDate', $toDate );
+        add_user_meta($user_id, 'user_theme', $theme );
       }
-      public static function language() {
-        $post_title = $_POST['post_title'];
+    /**
+    * 언어선택
+    */
+    public static function language() {
+        $language = $_POST['language'];
         $user_id  = get_current_user_id();
-
-        add_user_meta($user_id, 'fromDate', $fromDate );
-        add_user_meta($user_id, 'toDate', $toDate );
-      }
+        add_user_meta($user_id, 'user_language', $language );
+     }
+    /**
+    * 장소선택
+    */
       public static function place() {
-        $post_title = $_POST['post_title'];
+        $place = $_POST['place'];
         $user_id  = get_current_user_id();
-
-        add_user_meta($user_id, 'fromDate', $fromDate );
-        add_user_meta($user_id, 'toDate', $toDate );
+        add_user_meta($user_id, 'user_place', $place );
       }
 }
