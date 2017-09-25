@@ -14,8 +14,8 @@ class Tour extends Base {
       $fromDate = $_POST['fromDate']; // MM/DD/YYYY
       $toDate   = $_POST['toDate']; // MM/DD/YYYY
       $user_id  = get_current_user_id();
-      add_user_meta($user_id, 'fromDate', $fromDate );
-      add_user_meta($user_id, 'toDate', $toDate );
+      update_user_meta($user_id, 'fromDate', $fromDate );
+      update_user_meta($user_id, 'toDate', $toDate );
     }
     /**
     * 테마선택
@@ -23,7 +23,7 @@ class Tour extends Base {
     public static function theme() {
         $theme = $_POST['theme'];
         $user_id  = get_current_user_id();
-        add_user_meta($user_id, 'user_theme', $theme );
+        update_user_meta($user_id, 'user_theme', $theme );
       }
     /**
     * 언어선택
@@ -31,7 +31,7 @@ class Tour extends Base {
     public static function language() {
         $language = $_POST['language'];
         $user_id  = get_current_user_id();
-        add_user_meta($user_id, 'user_language', $language );
+        update_user_meta($user_id, 'user_language', $language );
      }
     /**
     * 장소선택
@@ -39,6 +39,6 @@ class Tour extends Base {
       public static function place() {
         $place = $_POST['place'];
         $user_id  = get_current_user_id();
-        add_user_meta($user_id, 'user_place', $place );
+        update_user_meta($user_id, 'user_place', $place );
       }
 }
