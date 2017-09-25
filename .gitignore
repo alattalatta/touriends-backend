@@ -26,6 +26,8 @@ composer.phar
 # Gradle:
 .idea/**/gradle.xml
 .idea/**/libraries
+.idea/**/webServers.xml
+.idea/**/deployment.xml
 
 # CMake
 cmake-build-debug/
