@@ -8,7 +8,7 @@ class Member extends Base {
 		parent::registerAction('register', [__CLASS__, 'register']);
 		parent::registerAction('logout', [__CLASS__, 'logout']);
 		parent::registerAction('set_intro', [__CLASS__, 'setIntro']);
-		parent::registerAction('get_user_image', [__CLASS__, 'getUserImage']);
+		parent::registerAction('get_intro_data', [__CLASS__, 'getIntroData']);
 	}
 
 	/**
@@ -110,11 +110,14 @@ class Member extends Base {
     }
 
     /**
-     * 프사 반환
+     * 현재 사용자 프사, ID 반환
      */
-    public static function getUserImage() {
+    public static function getIntroData() {
+    	/** @var \WP_User $current_user */
+    	$current_user = wp_get_current_user();
+
         // attachment id
-        $aid = get_user_meta(get_current_user_id(), 'user_image', true);
+        $aid = get_user_meta($current_user->ID, 'user_image', true);
         if ($aid === '') {
             die(json_encode([
                 'success' => false
@@ -123,7 +126,8 @@ class Member extends Base {
         $attachment_url = wp_get_attachment_image_url($aid);
         die(json_encode([
             'success' => true,
-            'url' => $attachment_url
+            'url' => $attachment_url,
+	        'login' => $current_user->user_login
         ]));
     }
 
