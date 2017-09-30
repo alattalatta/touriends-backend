@@ -30,3 +30,4 @@ class Recommend extends Base {
     //     echo '</script>';
     //   }
 }
+?>
