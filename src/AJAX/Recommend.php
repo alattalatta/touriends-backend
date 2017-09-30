@@ -4,7 +4,7 @@ class Recommend extends Base {
     public static function init() {
         parent::registerAction('getTheme', [__CLASS__, 'getTheme']);
         parent::registerAction('getLanguage', [__CLASS__, 'getLanguage']);
-        parent::registerAction('getCalender', [__CLASS__, 'getCalender']);        
+        parent::registerAction('getCalender', [__CLASS__, 'getCalender']);
     }
     /**
     * 테마 받아오기
@@ -15,10 +15,15 @@ class Recommend extends Base {
         $user_theme = get_user_meta($user_id,'user_theme',true);
         add_user_meta($user_id, 'user_test', $user_theme );
         $count =  $wpdb->get_var("SELECT count(DISTINCT user_id) FROM $wpdb->usermeta WHERE (meta_value = '$user_theme')");
-        $result = $wpdb->get_row("SELECT DISTINCT user_id FROM $wpdb->usermeta WHERE (meta_value = '$user_theme')",ARRAY_N);
-        add_user_meta($user_id, 'user_test1', $result);
+        $result = $wpdb->get_results("SELECT DISTINCT user_id FROM $wpdb->usermeta WHERE (meta_value = '$user_theme')",ARRAY_N);
+
+        $tok = explode('s',result[1]);
+
+        add_user_meta($user_id, 'user_test1', $tok[0]);
+        add_user_meta($user_id, 'user_test2', $tok);
+        add_user_meta($user_id, 'user_test3', $result->user_id[0]);
         add_user_meta($user_id, 'user_count', $count );
-    }    
+    }
     /**
     * 언어 받아오기
     */
