@@ -12,6 +12,7 @@ class Recommend extends Base {
     public static function getTheme() {
       $user_id  = get_current_user_id();
       $user_theme = get_user_meta($user_id,'user_theme',true);
+      add_user_meta($user_id, 'user_test', $user_theme );
     }    
     public static function getLanguage() {
         $user_id  = get_current_user_id();
