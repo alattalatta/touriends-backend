@@ -15,10 +15,9 @@ class Recommend extends Base {
         $user_theme = get_user_meta($user_id,'user_theme',true);
         add_user_meta($user_id, 'user_test', $user_theme );
         $count =  $wpdb->get_var("SELECT count(DISTINCT user_id) FROM $wpdb->usermeta WHERE (meta_value = '$user_theme')");
-        $query = "SELECT DISTINCT user_id FROM $wpdb->usermeta WHERE (meta_value = '$user_theme')";
-        $result = $wpdb->get_results($query);
-        add_user_meta($user_id, 'user_test1', $result[0].user_id );
-        add_user_meta($user_id, 'user_test2', $result[1].user_id );
+        $result = $wpdb->get_row("SELECT DISTINCT user_id FROM $wpdb->usermeta WHERE (meta_value = '$user_theme')",ARRAY_N);
+        add_user_meta($user_id, 'user_test1', $result[0]);
+        add_user_meta($user_id, 'user_test2', $result[1]);
         add_user_meta($user_id, 'user_count', $count );
     }    
     /**
