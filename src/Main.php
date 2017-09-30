@@ -10,6 +10,7 @@ class Main {
 			//AJAX\Demo::init();
 			AJAX\Member::init();
 			AJAX\Tour::init();
+			AJAX\Recommend::init();
 		});
 	}
 }
