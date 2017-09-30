@@ -12,8 +12,6 @@ class Recommend extends Base {
     public static function getTheme() {
       $user_id  = get_current_user_id();
       $user_theme = get_user_meta($user_id,'user_theme',true);
-      console_log($user_id);
-      console_log($user_theme);
     }    
     public static function getLanguage() {
         $user_id  = get_current_user_id();
@@ -23,10 +21,5 @@ class Recommend extends Base {
         $user_id  = get_current_user_id();
         $user_fromDate =  get_user_meta($user_id,'user_fromDate',true);
         $user_toDate =  get_user_meta($user_id,'user_toDate',true);
-      }
-      function console_log( $data ){
-        echo '<script>';
-        echo 'console.log('. json_encode( $data ) .')';
-        echo '</script>';
       }
 }
