@@ -24,4 +24,4 @@ class Recommend extends Base {
         $user_toDate =  get_user_meta($user_id,'user_toDate',true);
       }
 }
-?>
+
