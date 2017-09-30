@@ -15,6 +15,7 @@ class Matching extends Base {
         $cnt_theme =  $wpdb->get_var("SELECT count(DISTINCT user_id) FROM $wpdb->usermeta WHERE (meta_value = '$user_theme')");
         $ret_language = $wpdb->get_results("SELECT DISTINCT user_id FROM $wpdb->usermeta WHERE (meta_value = '$user_language')",ARRAY_N);
         $ret_theme = $wpdb->get_results("SELECT DISTINCT user_id FROM $wpdb->usermeta WHERE (meta_value = '$user_theme')",ARRAY_N);
+        var_dump($ret_language);
         // result의 id를 보면서 from - to 까지 보이게 한다
 
         date_default_timezone_set('Asia/Seoul');
@@ -23,8 +24,8 @@ class Matching extends Base {
         $tour_id = $ret_language[0];
         $tour_from = get_user_meta($tour_id,'user_fromDate',true);
         $tour_to = get_user_meta($tour_id,'user_toDate',true);
-        update_user_meta($tour_id, 'diff1', $tour_id);
-        update_user_meta($tour_id, 'diff2', $tour_to);
+        update_user_meta($tour_id, 'diff1', $user_fromDate);
+        update_user_meta($tour_id, 'diff2', $tour_id);
         for($idx =0; $idx<$cnt_lang; $idx++){
           $tour_id = $ret_language[$idx];
           $tour_fromDate = get_user_meta($tour_id,'user_fromDate',true);
