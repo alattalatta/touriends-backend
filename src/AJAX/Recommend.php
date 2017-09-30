@@ -11,23 +11,24 @@ class Recommend extends Base {
     */
     public static function getTheme() {
       $user_id  = get_current_user_id();
-      $user_theme = $wpdb->get_var("SELECT meta_value FROM $wpdb->usermeta WHERE (meta_key = 'user_theme' AND user_id = $user_id)");
-    //   console_log($user_id);
-    //   console_log($user_theme);
+      $user_theme = get_user_meta($user_id,'user_theme',true);
+        console_log($user_id);
+        console_log($user_theme);
+    
     }    
     public static function getLanguae() {
         $user_id  = get_current_user_id();
-        $user_Language = $wpdb->get_var("SELECT meta_value FROM $wpdb->usermeta WHERE (meta_key = 'user_language' AND user_id = $user_id)");
-      }  
+        $user_Language = get_user_meta($user_id,'user_language',true);
+    }
     public static function  getCalender() {
         $user_id  = get_current_user_id();
-        $user_fromDate = $wpdb->get_var("SELECT meta_value FROM $wpdb->usermeta WHERE (meta_key = 'user_fromDate' AND user_id = $user_id)");
-        $user_toDate = $wpdb->get_var("SELECT meta_value FROM $wpdb->usermeta WHERE (meta_key = 'user_toDate' AND user_id = $user_id)");
+        $user_fromDate =  get_user_meta($user_id,'user_fromDate',true);
+        $user_toDate =  get_user_meta($user_id,'user_toDate',true);
       }
-    //   function console_log( $data ){
-    //     echo '<script>';
-    //     echo 'console.log('. json_encode( $data ) .')';
-    //     echo '</script>';
-    //   }
+    function console_log( $data ){
+    echo '<script>';
+    echo 'console.log('. json_encode( $data ) .')';
+    echo '</script>';
+    }
 }
 ?>
