@@ -11,11 +11,21 @@ class Matching extends Base {
         $user_theme = get_user_meta($user_id,'user_theme',true);
         $user_fromDate =  get_user_meta($user_id,'user_fromDate',true);
         $user_toDate =  get_user_meta($user_id,'user_toDate',true);
-        $cnt_lang = $wpdb->get_var("SELECT count(DISTINCT user_id) FROM $wpdb->usermeta WHERE (meta_value = '$user_language')");
         $cnt_theme =  $wpdb->get_var("SELECT count(DISTINCT user_id) FROM $wpdb->usermeta WHERE (meta_value = '$user_theme')");
-        $ret_language = $wpdb->get_results("SELECT DISTINCT user_id FROM $wpdb->usermeta WHERE (meta_value = '$user_language')",ARRAY_N);
+
+        // Language filter
+        $statement = <<<SQL
+SELECT DISTINCT user_id FROM $wpdb->usermeta WHERE meta_value = '$user_language' AND user_id <> $user_id
+SQL;
+        $ret_language_raw = $wpdb->get_results($statement,ARRAY_N);
+        $ret_language = [];
+        // Flat
+		foreach ($ret_language_raw as $row) {
+			$ret_language[] = $row[0];
+		}
+		$cnt_lang = count($ret_language);
+
         $ret_theme = $wpdb->get_results("SELECT DISTINCT user_id FROM $wpdb->usermeta WHERE (meta_value = '$user_theme')",ARRAY_N);
-        var_dump($ret_language);
         // result의 id를 보면서 from - to 까지 보이게 한다
 
         date_default_timezone_set('Asia/Seoul');
@@ -26,6 +36,9 @@ class Matching extends Base {
         $tour_to = get_user_meta($tour_id,'user_toDate',true);
         update_user_meta($tour_id, 'diff1', $user_fromDate);
         update_user_meta($tour_id, 'diff2', $tour_id);
+
+        var_dump($ret_language);
+        var_dump($cnt_lang);
         for($idx =0; $idx<$cnt_lang; $idx++){
           $tour_id = $ret_language[$idx];
           $tour_fromDate = get_user_meta($tour_id,'user_fromDate',true);
@@ -44,6 +57,10 @@ class Matching extends Base {
           update_user_meta($user_id, 'date1', $dstdate1);
           update_user_meta($user_id, 'src2', $srcdate2);
           update_user_meta($user_id, 'date2', $dstdate2);
+          var_dump($src1);
+          var_dump($dst1);
+			var_dump($src2);
+			var_dump($dst2);
           if($srcdate1>$dstdate2 || $srcdate2 > $dstdate1){#안 겹치는 case
                   update_user_meta($user_id, 'matching_test', 0);
           }
