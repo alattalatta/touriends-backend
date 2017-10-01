@@ -18,12 +18,10 @@ class Tour extends Base {
       update_user_meta($user_id, 'user_fromDate', $fromDate );
       update_user_meta($user_id, 'user_toDate', $toDate );
 
-      if (get_user_by('calender', $calender)) {
-  			die(json_encode([
-  				'success' => false,
-  				'error'   => 'calender_duplicate'
-  			]));
-  		}
+      die(json_encode([
+        'success' => false,
+        'error'   => 'getLanguage_duplicate'
+      ]));
     }
 
     /**
@@ -34,12 +32,10 @@ class Tour extends Base {
       $user_id  = get_current_user_id();
       update_user_meta($user_id, 'user_theme', $theme );
 
-      if (get_user_by('theme', $theme)) {
-        die(json_encode([
-          'success' => false,
-          'error'   => 'theme_duplicate'
-        ]));
-      }
+      die(json_encode([
+        'success' => false,
+        'error'   => 'getLanguage_duplicate'
+      ]));
     }
 
     /**
@@ -50,12 +46,10 @@ class Tour extends Base {
       $user_id  = get_current_user_id();
       update_user_meta($user_id, 'user_language', $language );
 
-      if (get_user_by('language', $language)) {
-        die(json_encode([
-          'success' => false,
-          'error'   => 'language_duplicate'
-          ]));
-      }
+      die(json_encode([
+        'success' => false,
+        'error'   => 'getLanguage_duplicate'
+      ]));
     }
 
     /**
@@ -66,11 +60,9 @@ class Tour extends Base {
       $user_id  = get_current_user_id();
       update_user_meta($user_id, 'user_place', $place );
 
-      if (get_user_by('place', $place)) {
-        die(json_encode([
-          'success' => false,
-          'error'   => 'place_duplicate'
-          ]));
-      }
+      die(json_encode([
+        'success' => false,
+        'error'   => 'getLanguage_duplicate'
+      ]));
     }
 }
