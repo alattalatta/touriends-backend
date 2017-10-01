@@ -18,8 +18,8 @@ class Matching extends Base {
 
       # Language filter
       $statement = <<<SQL
-      SELECT DISTINCT user_id FROM $wpdb->usermeta WHERE meta_value = '$user_language' AND user_id <> $user_id
-      SQL;
+SELECT DISTINCT user_id FROM $wpdb->usermeta WHERE meta_value = '$user_language' AND user_id <> $user_id
+SQL;
       $ret_language_raw = $wpdb->get_col($statement);
       $ret_language = [];
 
