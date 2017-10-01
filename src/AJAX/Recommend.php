@@ -25,12 +25,10 @@ class Recommend extends Base {
         add_user_meta($user_id, 'user_test3', $result->user_id[0]);
         add_user_meta($user_id, 'user_count', $count );
 
-        if (get_user_by('getTheme', $getTheme)) {
-          die(json_encode([
-            'success' => false,
-            'error'   => 'getTheme_duplicate'
-          ]));
-        }
+        die(json_encode([
+          'success' => false,
+          'error'   => 'getTheme_duplicate'
+        ]));
     }
 
     /**
@@ -42,12 +40,10 @@ class Recommend extends Base {
         $user_language = get_user_meta($user_id,'user_language',true);
         $user_theme = $wpdb->get_var("SELECT user_id FROM $wpdb->usermeta WHERE (meta_value = $user_theme)");
 
-        if (get_user_by('getLanguage', $getLanguage)) {
-          die(json_encode([
-            'success' => false,
-            'error'   => 'getLanguage_duplicate'
-          ]));
-        }
+        die(json_encode([
+          'success' => false,
+          'error'   => 'getLanguage_duplicate'
+        ]));
     }
 
     /**
@@ -60,11 +56,9 @@ class Recommend extends Base {
         $user_toDate =  get_user_meta($user_id,'user_toDate',true);
         $user_theme = $wpdb->get_var("SELECT user_id FROM $wpdb->usermeta WHERE (meta_value = $user_theme)");
 
-        if (get_user_by('getCalender', $getCalender)) {
-          die(json_encode([
-            'success' => false,
-            'error'   => 'getCalender_duplicate'
-          ]));
-        }
+        die(json_encode([
+          'success' => false,
+          'error'   => 'getCalender_duplicate'
+        ]));
       }
 }
