@@ -1,7 +1,5 @@
 <?php
-
 namespace Touriends\Backend\AJAX;
-
 class Member extends Base {
 	public static function init() {
 		parent::registerAction('login', [__CLASS__, 'login']);
@@ -97,48 +95,46 @@ class Member extends Base {
 		]));
 	}
 
-    /**
-     * 자기소개
-     */
-    public static function setIntro() {
-        $intro = $_POST['intro'];
-        $uid = get_current_user_id();
-        $res = update_user_meta($uid, 'intro', $intro);
-        die(json_encode([
-            'success' => $res
-        ]));
+  /**
+    * 자기소개
+    */
+  public static function setIntro() {
+    $intro = $_POST['intro'];
+    $uid = get_current_user_id();
+    $res = update_user_meta($uid, 'intro', $intro);
+    die(json_encode([
+        'success' => $res
+    ]));
+  }
+
+  /**
+   * 현재 사용자 프사, ID 반환
+   */
+  public static function getIntroData() {
+  	/** @var \WP_User $current_user */
+  	$current_user = wp_get_current_user();
+    // attachment id
+    $aid = get_user_meta($current_user->ID, 'user_image', true);
+      if ($aid === '') {
+      die(json_encode([
+      	'success' => false
+      ]));
     }
-
-    /**
-     * 현재 사용자 프사, ID 반환
-     */
-    public static function getIntroData() {
-    	/** @var \WP_User $current_user */
-    	$current_user = wp_get_current_user();
-
-        // attachment id
-        $aid = get_user_meta($current_user->ID, 'user_image', true);
-        if ($aid === '') {
-            die(json_encode([
-                'success' => false
-            ]));
-        }
-        $attachment_url = wp_get_attachment_image_url($aid);
-        die(json_encode([
-            'success' => true,
-            'url' => $attachment_url,
-	        'login' => $current_user->user_login
-        ]));
-    }
-
-    /**
-     * 로그인/가입 공용 Sign in 메소드
-     * @param string $login ID
-     * @param string $pwd Password
-     *
-     * @return array
-     */
-	private static function signIn(string $login, string $pwd): array {
+    $attachment_url = wp_get_attachment_image_url($aid);
+    die(json_encode([
+        'success' => true,
+        'url' => $attachment_url,
+       'login' => $current_user->user_login
+    ]));
+  }
+  /**
+   * 로그인/가입 공용 Sign in 메소드
+   * @param string $login ID
+   * @param string $pwd Password
+   *
+   * @return array
+   */
+	 private static function signIn(string $login, string $pwd): array {
 		// 로그인 된 상태면 로그아웃 우선
 		if (is_user_logged_in()) {
 			wp_logout();
