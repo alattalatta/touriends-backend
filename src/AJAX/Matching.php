@@ -71,11 +71,10 @@ SQL;
           update_user_meta($user_id, 'matching_test',  $user_arr[0]);
         }
       }
-      if (get_user_by('getMatching', $getMatching)) {
-        die(json_encode([
+
+      die(json_encode([
           'success' => false,
           'error'   => 'getMatching_duplicate'
         ]));
-      }
     }
 }
