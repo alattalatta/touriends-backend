@@ -1,12 +1,21 @@
 <?php
+
 namespace Touriends\Backend\AJAX;
+
+use Touriends\Backend\User;
+
 class Member extends Base {
 	public static function init() {
+		// 로그인 관리
 		parent::registerAction('login', [__CLASS__, 'login']);
-		parent::registerAction('register', [__CLASS__, 'register']);
 		parent::registerAction('logout', [__CLASS__, 'logout']);
+		parent::registerAction('disconnect', [__CLASS__, 'disconnect']);
+
+		// 개인정보 GET/SET
+		parent::registerAction('register', [__CLASS__, 'register']);
+		parent::registerAction('get_intro', [__CLASS__, 'getIntro']);
 		parent::registerAction('set_intro', [__CLASS__, 'setIntro']);
-		parent::registerAction('get_intro_data', [__CLASS__, 'getIntroData']);
+		parent::registerAction('get_profile_image', [__CLASS__, 'getProfileImage']);
 	}
 
 	/**
@@ -14,7 +23,7 @@ class Member extends Base {
 	 */
 	public static function login() {
 		$login = $_POST['login'];
-		$pwd   = $_POST['pwd'];
+		$pwd = $_POST['pwd'];
 		die(json_encode(self::signIn($login, $pwd)));
 	}
 
@@ -22,10 +31,10 @@ class Member extends Base {
 	 * 회원등록
 	 */
 	public static function register() {
-		$login   = $_POST['login'];
-		$name    = $_POST['name'];
-		$pwd     = $_POST['pwd'];
-		$email   = $_POST['email'];
+		$login = $_POST['login'];
+		$name = $_POST['name'];
+		$pwd = $_POST['pwd'];
+		$email = $_POST['email'];
 		$website = $_POST['website'];
 		// 기존 유저와 겹칠 경우
 		if (get_user_by('login', $login)) {
@@ -34,14 +43,14 @@ class Member extends Base {
 				'error'   => 'login_duplicate'
 			]));
 		}
-		$userdata = [
+		$user_args = [
 			'user_login'   => $login,
 			'user_pass'    => $pwd,
 			'display_name' => $name,
 			'user_email'   => $email,
 			'user_url'     => $website
 		];
-		$user_id  = wp_insert_user($userdata);
+		$user_id = wp_insert_user($user_args);
 		// 이미지 업데이트 (프사업로드)
 		// 이미지 업로드는 워드프레스 기본 업로더를 사용함
 		// 해상도도 알아서 나눠준다고?
@@ -78,63 +87,64 @@ class Member extends Base {
 	 * 탈퇴
 	 */
 	public static function disconnect() {
-		if (! is_user_logged_in()) {
-			die(json_encode([
-				'success' => false
-			]));
-		}
-		$user_id = get_current_user_id();
+		$uid = User\Utility::getCurrentUser()->ID;
 		wp_logout();
-		$attachment_id = get_user_meta($user_id, 'user_image', true);
+		$attachment_id = get_user_meta($uid, 'user_image', true);
 		if ($attachment_id) {
 			wp_delete_attachment($attachment_id, true);
 		}
-		wp_delete_user($user_id);
+		wp_delete_user($uid);
 		die(json_encode([
 			'success' => true
 		]));
 	}
 
-  /**
-    * 자기소개
-    */
-  public static function setIntro() {
-    $intro = $_POST['intro'];
-    $uid = get_current_user_id();
-    $res = update_user_meta($uid, 'intro', $intro);
-    die(json_encode([
-        'success' => $res
-    ]));
-  }
+	/**
+	 * 자기소개 반환
+	 */
+	public static function getIntro() {
+		$uid = User\Utility::getCurrentUser()->ID;
+		$intro = get_user_meta($uid, 'intro', true);
+		die(json_encode([
+			'success' => true,
+			'intro'   => $intro
+		]));
+	}
 
-  /**
-   * 현재 사용자 프사, ID 반환
-   */
-  public static function getIntroData() {
-  	/** @var \WP_User $current_user */
-  	$current_user = wp_get_current_user();
-    // attachment id
-    $aid = get_user_meta($current_user->ID, 'user_image', true);
-      if ($aid === '') {
-      die(json_encode([
-      	'success' => false
-      ]));
-    }
-    $attachment_url = wp_get_attachment_image_url($aid);
-    die(json_encode([
-        'success' => true,
-        'url' => $attachment_url,
-       'login' => $current_user->user_login
-    ]));
-  }
-  /**
-   * 로그인/가입 공용 Sign in 메소드
-   * @param string $login ID
-   * @param string $pwd Password
-   *
-   * @return array
-   */
-	 private static function signIn(string $login, string $pwd): array {
+	/**
+	 * 자기소개 설정
+	 */
+	public static function setIntro() {
+		$intro = $_POST['intro'];
+		$uid = User\Utility::getCurrentUser()->ID;
+		$res = update_user_meta($uid, 'intro', $intro);
+		die(json_encode([
+			'success' => true
+		]));
+	}
+
+	/**
+	 * 프로필 이미지의 <b>URL</b> 반환
+	 */
+	public static function getProfileImage() {
+		$uid = User\Utility::getCurrentUser()->ID;
+		$aid = get_user_meta($uid, 'user_image', true); // attachment id
+		$attachment_url = wp_get_attachment_image_url($aid);
+		die(json_encode([
+			'success' => true,
+			'image'   => $attachment_url
+		]));
+	}
+
+	/**
+	 * 로그인/가입 공용 Sign in 메소드
+	 *
+	 * @param string $login ID
+	 * @param string $pwd Password
+	 *
+	 * @return array
+	 */
+	private static function signIn(string $login, string $pwd): array {
 		// 로그인 된 상태면 로그아웃 우선
 		if (is_user_logged_in()) {
 			wp_logout();
@@ -154,8 +164,9 @@ class Member extends Base {
 		}
 
 		return [
-			'success' => true,
-			'uid'     => $user->ID
+			'success'    => true,
+			'uid'        => $user->ID,
+			'user_login' => $user->user_login
 		];
 	}
 }
