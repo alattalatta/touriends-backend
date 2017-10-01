@@ -7,6 +7,7 @@ class Tour extends Base {
       parent::registerAction('language', [__CLASS__, 'language']);
       parent::registerAction('place', [__CLASS__, 'place']);
     }
+
     /**
     * 달력
     */
@@ -24,6 +25,7 @@ class Tour extends Base {
   			]));
   		}
     }
+
     /**
     *  테마
     */
@@ -39,9 +41,10 @@ class Tour extends Base {
         ]));
       }
     }
+
     /**
     * 언어
-    */    
+    */
     public static function language() {
       $language = $_POST['language'];
       $user_id  = get_current_user_id();
@@ -54,6 +57,7 @@ class Tour extends Base {
           ]));
       }
     }
+
     /**
     * 장소
     */
