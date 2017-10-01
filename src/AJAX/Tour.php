@@ -1,68 +1,68 @@
 <?php
+
 namespace Touriends\Backend\AJAX;
+
+use Touriends\Backend\User;
+
 class Tour extends Base {
-    public static function init() {
-      parent::registerAction('calender', [__CLASS__, 'calender']);
-      parent::registerAction('theme', [__CLASS__, 'theme']);
-      parent::registerAction('language', [__CLASS__, 'language']);
-      parent::registerAction('place', [__CLASS__, 'place']);
-    }
+	public static function init() {
+		parent::registerAction('set_calendar', [__CLASS__, 'setCalendar']);
+		parent::registerAction('set_language', [__CLASS__, 'setLanguage']);
+		parent::registerAction('set_theme', [__CLASS__, 'setTheme']);
+		parent::registerAction('set_place', [__CLASS__, 'setPlace']);
+	}
 
-    /**
-    * 달력
-    */
-    public static function calender() {
-      $fromDate = $_POST['fromDate']; // MM/DD/YYYY
-      $toDate   = $_POST['toDate']; // MM/DD/YYYY
-      $user_id  = get_current_user_id();
-      update_user_meta($user_id, 'user_fromDate', $fromDate );
-      update_user_meta($user_id, 'user_toDate', $toDate );
+	/**
+	 * 달력
+	 */
+	public static function setCalendar() {
+		$fromDate = $_POST['from']; // 4Y-2M-2D
+		$toDate = $_POST['to']; // 4Y-2M-2D
+		$user_id = User\Utility::getCurrentUser()->ID;
+		update_user_meta($user_id, 'user_fromDate', $fromDate);
+		update_user_meta($user_id, 'user_toDate', $toDate);
 
-      die(json_encode([
-        'success' => false,
-        'error'   => 'getLanguage_duplicate'
-      ]));
-    }
+		die(json_encode([
+			'success' => true
+		]));
+	}
 
-    /**
-    *  테마
-    */
-    public static function theme() {
-      $theme = $_POST['theme'];
-      $user_id  = get_current_user_id();
-      update_user_meta($user_id, 'user_theme', $theme );
+	/**
+	 *  테마
+	 */
+	public static function setTheme() {
+		$theme = $_POST['val'];
+		$user_id = User\Utility::getCurrentUser()->ID;
+		update_user_meta($user_id, 'user_theme', $theme);
 
-      die(json_encode([
-        'success' => false,
-        'error'   => 'getLanguage_duplicate'
-      ]));
-    }
+		die(json_encode([
+			'success' => true
+		]));
+	}
 
-    /**
-    * 언어
-    */
-    public static function language() {
-      $language = $_POST['language'];
-      $user_id  = get_current_user_id();
-      update_user_meta($user_id, 'user_language', $language );
+	/**
+	 * 언어
+	 */
+	public static function setLanguage() {
+		$language = $_POST['val'];
+		$user_id = User\Utility::getCurrentUser()->ID;
+		update_user_meta($user_id, 'user_language', $language);
 
-      die(json_encode([
-        'success' => false,
-        'error'   => 'getLanguage_duplicate'
-      ]));
-    }
+		die(json_encode([
+			'success' => true
+		]));
+	}
 
-    /**
-    * 장소
-    */
-    public static function place() {
-      $place = $_POST['place'];
-      $user_id  = get_current_user_id();
-      update_user_meta($user_id, 'user_place', $place );
+	/**
+	 * 장소
+	 */
+	public static function setPlace() {
+		$place = $_POST['val'];
+		$user_id = User\Utility::getCurrentUser()->ID;
+		update_user_meta($user_id, 'user_place', $place);
 
-      die(json_encode([
-        'success' => false,
-        'error'   => 'getLanguage_duplicate'
-      ]));
-    }
+		die(json_encode([
+			'success' => true
+		]));
+	}
 }
