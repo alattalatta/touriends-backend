@@ -9,10 +9,10 @@
     <orderEntry type="module-library">
       <library name="PHP" type="php">
         <CLASSES>
-          <root url="file://$USER_HOME$/wordpress" />
+          <root url="file://$MODULE_DIR$/../../wordpress" />
         </CLASSES>
         <SOURCES>
-          <root url="file://$USER_HOME$/wordpress" />
+          <root url="file://$MODULE_DIR$/../../wordpress" />
         </SOURCES>
       </library>
     </orderEntry>

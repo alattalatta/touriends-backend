@@ -11,10 +11,7 @@ class Main {
 			AJAX\Member::init();
 			AJAX\Tour::init();
 			AJAX\Recommend::init();
-		});
-
-		add_action('admin_enqueue_scripts', function() {
-			AJAX\Matching::getMatching();
+			AJAX\Matching::init();
 		});
 	}
 }

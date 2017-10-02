@@ -4,7 +4,7 @@ class Recommend extends Base {
     public static function init() {
         parent::registerAction('getTheme', [__CLASS__, 'getTheme']);
         parent::registerAction('getLanguage', [__CLASS__, 'getLanguage']);
-        parent::registerAction('getCalender', [__CLASS__, 'getCalender']);
+        parent::registerAction('getCalender', [__CLASS__, 'getCalendar']);
     }
 
     /**
@@ -49,7 +49,7 @@ class Recommend extends Base {
     /**
     * 일정 받아오기
     */
-    public static function getCalender() {
+    public static function getCalendar() {
         global $wpdb;
         $user_id  = get_current_user_id();
         $user_fromDate =  get_user_meta($user_id,'user_fromDate',true);
@@ -58,7 +58,7 @@ class Recommend extends Base {
 
         die(json_encode([
           'success' => false,
-          'error'   => 'getCalender_duplicate'
+          'error'   => 'getCalendar_duplicate'
         ]));
       }
 }
