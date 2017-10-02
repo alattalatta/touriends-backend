@@ -1,4 +1,5 @@
 <?php
+
 namespace Touriends\Backend\AJAX;
 class Matching extends Base
 {
@@ -6,6 +7,7 @@ class Matching extends Base
     {
         parent::registerAction('getMatching', [__CLASS__, 'getMatching']);
     }
+
     public static function getMatching()
     {
         global $wpdb;
@@ -15,13 +17,15 @@ class Matching extends Base
         $user_fromDate = get_user_meta($user_id, 'user_fromDate', true);
         $user_toDate = get_user_meta($user_id, 'user_toDate', true);
         $cnt_theme = $wpdb->get_var("SELECT count(DISTINCT user_id) FROM $wpdb->usermeta WHERE (meta_value = '$user_theme')");
+
         $clause_where = '';
         for ($i = 0; $i < count($user_language); $i++) {
-        	$lang = $user_language[$i];
-        	if ($i !== 0)
-        		$clause_where .= ' OR ';
-        	$clause_where .= "meta_value = ${lang}";
-		}
+            $lang = $user_language[$i][0];
+            if ($i !== 0)
+                $clause_where .= ' OR ';
+            $clause_where .= "meta_value = ${lang}";
+        }
+
         // Language filter
         $statement = <<<SQL
 SELECT
@@ -29,6 +33,7 @@ DISTINCT user_id
 FROM $wpdb->usermeta
 WHERE $clause_where
 SQL;
+
         $ret_language_raw = $wpdb->get_col($statement);
         $ret_language = [];
         // Flat
@@ -99,6 +104,6 @@ SQL;
                 array_push_associative($theArray, $push);
             }
         }
-        update_user_meta($user_id, 'arrayTest', $theArray);
+        update_user_meta($user_id, 'arr_test', $theArray);
     }
 }
