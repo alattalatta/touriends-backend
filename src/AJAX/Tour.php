@@ -2,7 +2,7 @@
 namespace Touriends\Backend\AJAX;
 class Tour extends Base {
     public static function init() {
-        parent::registerAction('calender', [__CLASS__, 'calender']);
+        parent::registerAction('calendar', [__CLASS__, 'calendar']);
         parent::registerAction('theme', [__CLASS__, 'theme']);
         parent::registerAction('language', [__CLASS__, 'language']);
         parent::registerAction('place', [__CLASS__, 'place']);
@@ -10,7 +10,7 @@ class Tour extends Base {
     /**
     * 달력
     */
-    public static function calender() {
+    public static function calendar() {
       $fromDate = $_POST['fromDate']; // MM/DD/YYYY
       $toDate   = $_POST['toDate']; // MM/DD/YYYY
       $user_id  = get_current_user_id();
