@@ -23,16 +23,16 @@ class Matching extends Base
             $lang = $user_language[$i];
             if ($i !== 0)
                 $clause_where .= ' OR ';
-            $clause_where .= "meta_value = ${lang}";
+            $clause_where .= "meta_value = '${lang}'";
         }
 
         // Language filter
         $statement = <<<SQL
 SELECT DISTINCT user_id
 FROM $wpdb->usermeta
-WHERE '$clause_where'
+WHERE $clause_where
 SQL;
-        $ret_language_raw = $wpdb->get_col($statement);
+        $ret_language_raw = $wpdb->get_results($statement);
         die(json_encode($ret_language_raw));
         $ret_language = [];
         // Flat
