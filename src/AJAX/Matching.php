@@ -1,6 +1,8 @@
 <?php
 
 namespace Touriends\Backend\AJAX;
+use Touriends\Backend\Match;
+
 class Matching extends Base
 {
     public static function init()
@@ -18,6 +20,7 @@ class Matching extends Base
         $user_toDate = get_user_meta($user_id, 'user_toDate', true);
         $cnt_theme = $wpdb->get_var("SELECT count(DISTINCT user_id) FROM $wpdb->usermeta WHERE (meta_value = '$user_theme')");
 
+        // Language Filter
         $clause_where = '';
         for ($i = 0; $i < count($user_language); $i++) {
             $lang = $user_language[$i];
@@ -26,43 +29,21 @@ class Matching extends Base
             $clause_where .= "meta_value = '${lang}'";
         }
 
-        // Language filter
         $statement = <<<SQL
-SELECT DISTINCT user_id
-FROM $wpdb->usermeta
-WHERE $clause_where
+SELECT DISTINCT user_id FROM $wpdb->usermeta WHERE $clause_where LIMIT 12
 SQL;
-        $ret_language_raw = $wpdb->get_results($statement);
-        die(json_encode($ret_language_raw));
-        $ret_language = [];
-        // Flat
-        foreach ($ret_language_raw as $row) {
-            $ret_language[] = $row[0];
-        }
-        $ret_theme = $wpdb->get_col("SELECT DISTINCT user_id FROM $wpdb->usermeta WHERE (meta_value = '$user_theme')");
+        $ret_language = $wpdb->get_col($statement);
+
+        // Theme Filter
+        // $ret_theme = $wpdb->get_col("SELECT DISTINCT user_id FROM $wpdb->usermeta WHERE (meta_value = '$user_theme')");
         // result의 id를 보면서 from - to 까지 보이게 한다
         date_default_timezone_set('Asia/Seoul');
         #매칭을 한 사용자의 출발일 도착일
         //update_user_meta($user_id, 'stand1', $user_fromDate);
         //update_user_meta($user_id, 'stand2', $user_toDate);
-        function array_push_associative(&$arr)
-        {
-            $ret = 0;
-            $args = func_get_args();
-            foreach ($args as $arg) {
-                if (is_array($arg)) {
-                    foreach ($arg as $key => $value) {
-                        $arr[$key] = $value;
-                        $ret++;
-                    }
-                } else {
-                    $arr[$arg] = "";
-                }
-            }
-            return $ret;
-        }
-        $chk = 0;
-        foreach ($ret_language_raw as $tour_id) {
+
+        $theArray = [];
+        foreach ($ret_language as $tour_id) {
             $tour_fromDate = get_user_meta($tour_id, 'user_fromDate', true);
             $tour_toDate = get_user_meta($tour_id, 'user_toDate', true);
             //update_user_meta($user_id, 'comp1', $tour_fromDate);
@@ -95,14 +76,28 @@ SQL;
                 $days = date_diff($srcdate2, $dstdate2)->days + 1;
                 //update_user_meta($user_id, 'ans', $days);
             }
-            if ($days > 0 && $chk == 0) {
-                $theArray = array($tour_id . "_day" => $days);
-                $chk++;
-            } else if ($days > 0) {
-                $push = array($tour_id . "_day" => $days);
-                array_push_associative($theArray, $push);
+            if ($days > 0) {
+              // $theArray[$tour_id . '_day'] = $days;
+                $theme = get_user_meta($tour_id, 'user_theme', true);
+                $user = new Match\UserData($tour_id, $days, $theme);
+                $theArray[] = $user;
             }
         }
-        update_user_meta($user_id, 'arr_test', $theArray);
+        usort($theArray, function($a, $b) {
+          $res = 0;
+          if ($a->schedule > $b->schedule) {
+            return 1;
+          }
+          else if ($b->schedule > $a->schedule) {
+            return -1;
+          }
+
+          if ($a->schedule === $b->schedule) {
+            $a_theme_same = $a->theme === $user_theme;
+            $b_theme_same = $b->theme === $user_theme;
+            $res = $a_theme_same > $b_theme_same ? 1 : 0;
+          }
+        });
+        die(json_encode($theArray));
     }
 }
