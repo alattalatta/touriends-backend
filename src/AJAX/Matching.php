@@ -20,7 +20,7 @@ class Matching extends Base
 
         $clause_where = '';
         for ($i = 0; $i < count($user_language); $i++) {
-            $lang = $user_language[$i][0];
+            $lang = $user_language[$i];
             if ($i !== 0)
                 $clause_where .= ' OR ';
             $clause_where .= "meta_value = ${lang}";
@@ -28,13 +28,12 @@ class Matching extends Base
 
         // Language filter
         $statement = <<<SQL
-SELECT
-DISTINCT user_id
+SELECT DISTINCT user_id
 FROM $wpdb->usermeta
-WHERE $clause_where
+WHERE '$clause_where'
 SQL;
-
         $ret_language_raw = $wpdb->get_col($statement);
+        die(json_encode($ret_language_raw));
         $ret_language = [];
         // Flat
         foreach ($ret_language_raw as $row) {
