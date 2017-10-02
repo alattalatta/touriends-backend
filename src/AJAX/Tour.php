@@ -1,4 +1,5 @@
 <?php
+
 namespace Touriends\Backend\AJAX;
 class Tour extends Base {
     public static function init() {
@@ -7,47 +8,36 @@ class Tour extends Base {
         parent::registerAction('language', [__CLASS__, 'language']);
         parent::registerAction('place', [__CLASS__, 'place']);
     }
+
     /**
      * 달력
      */
     public static function calendar() {
-<<<<<<< HEAD
-      $fromDate = $_POST['fromDate']; // MM/DD/YYYY
-      $toDate   = $_POST['toDate']; // MM/DD/YYYY
-      $user_id = get_current_user_id();
-      update_user_meta($user_id, 'user_fromDate', $fromDate );
-      update_user_meta($user_id, 'user_toDate', $toDate );
-    }
-=======
         $fromDate = $_POST['fromDate']; // MM/DD/YYYY
-        $toDate   = $_POST['toDate']; // MM/DD/YYYY
+        $toDate = $_POST['toDate']; // MM/DD/YYYY
         $user_id = get_current_user_id();
-        update_user_meta($user_id, 'user_fromDate', $fromDate );
-        update_user_meta($user_id, 'user_toDate', $toDate );
->>>>>>> bffe7b67e47db2bbb8d172aa0dc2aea3c95222d6
+        update_user_meta($user_id, 'user_fromDate', $fromDate);
+        update_user_meta($user_id, 'user_toDate', $toDate);
 
     }
+
     public static function theme() {
         $theme = $_POST['theme'];
         $user_id = get_current_user_id();
-        update_user_meta($user_id, 'user_theme', $theme );
+        update_user_meta($user_id, 'user_theme', $theme);
     }
+
     public static function language() {
         $language = $_POST['language'];
         $user_id = get_current_user_id();
-<<<<<<< HEAD
-        foreach($language as $lang){
-          add_user_meta($user_id, 'user_language', $lang);
+        foreach ($language as $lang) {
+            add_user_meta($user_id, 'user_language', $lang);
         }
-      }
-      public static function place() {
-=======
-        update_user_meta($user_id, 'user_language', $language );
     }
+
     public static function place() {
->>>>>>> bffe7b67e47db2bbb8d172aa0dc2aea3c95222d6
         $place = $_POST['place'];
         $user_id = get_current_user_id();
-        update_user_meta($user_id, 'user_place', $place );
+        update_user_meta($user_id, 'user_place', $place);
     }
 }
