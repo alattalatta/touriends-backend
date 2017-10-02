@@ -18,28 +18,21 @@ class Matching extends Base
         $user_toDate = get_user_meta($user_id, 'user_toDate', true);
         $cnt_theme = $wpdb->get_var("SELECT count(DISTINCT user_id) FROM $wpdb->usermeta WHERE (meta_value = '$user_theme')");
 
-        if($user_language[0]==null)
-        {
-            $user_language[0]="cant";
-        }
-        if($user_language[1]==null)
-        {
-            $user_language[1]="cant";
-        }
-        if($user_language[2]==null)
-        {
-            $user_language[2]="cant";
-        }
+        $clause_where = '';
+        for ($i = 0; $i < count($user_language); $i++) {
+        	$lang = $user_language[$i];
+        	if ($i !== 0)
+        		$clause_where .= ' OR ';
+        	$clause_where .= "meta_value = ${lang}";
+		}
 
         // Language filter
         $statement = <<<SQL
-        SELECT DISTINCT user_id FROM $wpdb->usermeta where (meta_value = $user_language[0]  or  meta_value = $user_language[1] or meta_value = $$user_language[2]
+SELECT
+DISTINCT user_id
+FROM $wpdb->usermeta
+WHERE $clause_where
 SQL;
-        
-//        SELECT DISTINCT user_id FROM $wpdb->usermeta WHERE meta_value = '$user_language' AND user_id <> $user_id
-
-
-
 
         $ret_language_raw = $wpdb->get_col($statement);
         $ret_language = [];
