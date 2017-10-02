@@ -18,24 +18,44 @@ class Matching extends Base {
 
       # Language filter
       $statement = <<<SQL
-SELECT DISTINCT user_id FROM $wpdb->usermeta WHERE meta_value = '$user_language' AND user_id <> $user_id
+SELECT DISTINCT user_id FROM $wpdb->usermeta where user_id <> $user_id
 SQL;
-      $ret_language_raw = $wpdb->get_col($statement);
-      $ret_language = [];
 
+      $tour_db = $wpdb->get_col($statement);
       # Flat
-  		foreach ($ret_language_raw as $row) {
-  		  $ret_language[] = $row[0];
-  		}
 
-  //  $ret_theme = $wpdb->get_col("SELECT DISTINCT user_id FROM $wpdb->usermeta WHERE (meta_value = '$user_theme')");
-      // result의 id를 보면서 from - to 까지 보이게 한다
+      //$ret_theme = $wpdb->get_col("SELECT DISTINCT user_id FROM $wpdb->usermeta WHERE (meta_value = '$user_theme')");
+
       date_default_timezone_set('Asia/Seoul');//기준시간 세팅
 
       #매칭을 비교할 사용자의 출발일 도착일
-      foreach($ret_language as $tour_id){
-        $tour_fromDate = get_user_meta($tour_id,'user_fromDate',true);
-        $tour_toDate = get_user_meta($tour_id,'user_toDate',true);
+
+###############################배열 추가########################################
+      function array_push_associative(&$arr){
+        $args = func_get_args();
+        foreach($args as $arg){
+          if(is_array($arg)){
+            foreach($arg as $key => $value){
+              $arr[$key] = $value;
+              $ret++;
+            }
+          }else{
+            arr[$arg] = "";
+          }
+        }
+        return $ret;
+      }
+      $id = "noasand";
+      $theArray = array("id_temp" => "0");
+      $push = array($id => date_diff($srcdate2,$dstdate2)->days+1);
+      array_push_associative($theArray,$push);
+###############################배열 추가########################################
+
+      var_dump($tour_db);
+      foreach($tour_db as $tour_id){
+
+        $tour_fromDate = get_user_meta(10,'user_fromDate',true);
+        $tour_toDate = get_user_meta(10,'user_toDate',true);
 
         #검색될 내용
         $src1 = $user_fromDate;
@@ -48,27 +68,39 @@ SQL;
         $dstdate1 = date_create($dst1);
         $srcdate2 = date_create($src2);
         $dstdate2 = date_create($dst2);
-        $user_arr = array("temp","test");
+        update_user_meta($user_id, '$srcdate1', $srcdate1);
+        update_user_meta($user_id, '$dstdate1', $dstdate1);
+        update_user_meta($user_id, '$srcdate2', $srcdate2);
+        update_user_meta($user_id, '$dstdate2', $dstdate2);
+
+
+        $days = 0;
 
         if($srcdate1>$dstdate2 || $srcdate2 > $dstdate1){#안 겹치는 case
-          array_push($user_arr,$tour_id,0);
-          update_user_meta($user_id, 'matching_test', $user_arr[0]);
+          $days = 0;
+          update_user_meta($user_id, 'days_test_case0', $days);
         }
         else if($srcdate1>$srcdate2 && $dstdate1>$dstdate2){#1번 case
-          array_push($user_arr,$tour_id,date_diff($srcdate1,$dstdate2)->days+1);
-          update_user_meta($user_id, 'matching_test',  $user_arr[0]);
+          $days = date_diff($srcdate1,$dstdate2)->days+1;
+          update_user_meta($user_id, 'days_test_case1', $days);
         }
         else if($srcdate2>$srcdate1 && $dstdate2>$dstdate1){#2번 case
-          array_push($user_arr,$tour_id,date_diff($srcdate2,$dstdate1)->days+1);
-          update_user_meta($user_id, 'matching_test',  $user_arr[0]);
+          $chk = date_diff($srcdate2,$dstdate1)->days+1;
+          update_user_meta($user_id, 'days_test_case2', $days);
         }
         else if($srcdate1>$srcdate2 && $dstdate2>$dstdate1){#3번 case
-          array_push($user_arr,$tour_id,date_diff($srcdate1,$dstdate1)->days+1);
-          update_user_meta($user_id, 'matching_test',  $user_arr[0]);
+          $days = date_diff($srcdate1,$dstdate1)->days+1;
+          update_user_meta($user_id, 'days_test_case3', $days);
         }
-        else{#4번 case
-          array_push($user_arr,$tour_id,date_diff($srcdate2,$dstdate2)->days+1);
-          update_user_meta($user_id, 'matching_test',  $user_arr[0]);
+        else if($srcdate1<$srcdate2 && $dstdate2<$dstdate1){#4번 case
+          $days = date_diff($srcdate2,$dstdate2)->days+1;
+          update_user_meta($user_id, 'days_test_case4', $days."why");
+        }
+
+        if($days > 0){
+          update_user_meta($user_id, 'tour_id_test', $tour_id);
+          update_user_meta($user_id, 'tour_fromDate_test', $tour_fromDate);
+          update_user_meta($user_id, 'tour_toDate_test', $tour_toDate);
         }
       }
 
