@@ -76,7 +76,7 @@ class Tour extends Base {
 		$language = get_user_meta($user_id, 'user_language');
 		die(json_encode([
 			'success' => true,
-			'language'    => $language
+			'language' => $language
 		]));
 	}
 

@@ -17,4 +17,9 @@ class Utility {
 		}
 		return $user;
 	}
+
+	public static function getUserImageUrl($uid): string {
+		$aid = get_user_meta($uid, 'user_image', true); // attachment id
+		return wp_get_attachment_image_url($aid);
+	}
 }

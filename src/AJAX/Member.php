@@ -128,8 +128,7 @@ class Member extends Base {
 	 */
 	public static function getProfileImage() {
 		$uid = User\Utility::getCurrentUser()->ID;
-		$aid = get_user_meta($uid, 'user_image', true); // attachment id
-		$attachment_url = wp_get_attachment_image_url($aid);
+		$attachment_url = User\Utility::getUserImageUrl($uid);
 		die(json_encode([
 			'success' => true,
 			'image'   => $attachment_url
