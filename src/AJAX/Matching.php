@@ -27,9 +27,8 @@ class Matching extends Base {
 			$clause_where .= "meta_value = '${lang}'";
 		}
 
-		// 12명 까지만 (LIMIT 12)
 		$statement = <<<SQL
-SELECT DISTINCT user_id FROM $wpdb->usermeta WHERE $clause_where LIMIT 12
+SELECT DISTINCT user_id FROM $wpdb->usermeta WHERE $clause_where
 SQL;
 		$ret_language = $wpdb->get_col($statement);
 
@@ -49,7 +48,7 @@ SQL;
 
 			// 내꺼 = 검색 주체 / 네꺼 = 검색 결과
 			if ($my_from > $your_to || $your_from > $my_to) { // 안 겹침
-				return;
+				continue;
 			}
 
 			if ($my_from > $your_from && $my_to > $your_to) { // 내꺼가 네꺼 다 감쌈
@@ -64,12 +63,14 @@ SQL;
 			if ($days > 0) {
 				$theme = get_user_meta($tour_id, 'user_theme', true);
 				$languages = get_user_meta($tour_id, 'user_language');
+				$comment = get_user_meta($tour_id, 'user_longIntro', true);
 				$image = User\Utility::getUserImageUrl($tour_id);
 				$result[] = [
-					'uid'       => $tour_id,
+					'uid'       => intval($tour_id),
 					'theme'     => $theme,
 					'languages' => $languages,
 					'image'     => $image,
+					'comment'   => $comment,
 					'days'      => $days
 				];
 			}
