@@ -9,6 +9,7 @@ class Main {
 			AJAX\Member::init();
 			AJAX\Tour::init();
 			AJAX\Matching::init();
+			AJAX\Like::init();
 		});
 	}
 }
