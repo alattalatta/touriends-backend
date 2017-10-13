@@ -44,7 +44,7 @@ class Like extends Base
                $tour_id = $comp;
                $theme = get_user_meta($tour_id, 'user_theme', true);
                $languages = get_user_meta($tour_id, 'user_language');
-               //$image = User\Utility::getUserImageUrl($tour_id); //주석을 없애면 500 error
+               $image = User\Utility::getUserImageUrl($tour_id); 
                $intro = get_user_meta($tour_id, 'user_intro', true);
                $birth = get_user_meta($tour_id, 'user_birth',true);
                $result[] = [
