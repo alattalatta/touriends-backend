@@ -10,6 +10,8 @@ Author URI: http://URI_Of_The_Plugin_Author
 License: A "Slug" license name e.g. GPL2
 */
 
+define('BACKEND__FILE__', __FILE__);
+
 require_once('vendor/autoload.php');
 
 use Touriends\Backend\Main;

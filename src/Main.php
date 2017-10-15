@@ -5,8 +5,8 @@ namespace Touriends\Backend;
 class Main {
 	public $classes = [];
 	public function main() {
+		AJAX\Table::init();
 		add_action('init', function() {
-			AJAX\Table::init();
 			AJAX\Member::init();
 			AJAX\Tour::init();
 			AJAX\Matching::init();
