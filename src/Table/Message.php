@@ -1,14 +1,13 @@
 <?php
 
-namespace Touriends\Backend\AJAX;
+namespace Touriends\Backend\Table;
 
-class Table extends Base {
-	public static function init() {
+class Message {
+	public static function register() {
 		register_activation_hook(BACKEND__FILE__, [__CLASS__, 'jal_install']);
 	}
 	public static function jal_install() {
 		global $wpdb;
-		global $jal_db_version;
 
 		$table_name = $wpdb->prefix . 'message';
 
