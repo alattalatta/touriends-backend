@@ -64,6 +64,7 @@ SQL;
 				$theme = get_user_meta($tour_id, 'user_theme', true);
 				$languages = get_user_meta($tour_id, 'user_language');
 				$comment = get_user_meta($tour_id, 'user_longIntro', true);
+				$liked = array_search($tour_id, get_user_meta($user_id, 'user_like')) !== false;
 				$image = User\Utility::getUserImageUrl($tour_id);
 				$result[] = [
 					'uid'       => intval($tour_id),
@@ -71,7 +72,8 @@ SQL;
 					'languages' => $languages,
 					'image'     => $image,
 					'comment'   => $comment,
-					'days'      => $days
+					'days'      => $days,
+					'liked'     => $liked
 				];
 			}
 		}
