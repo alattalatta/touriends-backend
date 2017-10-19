@@ -16,6 +16,7 @@ class Member extends Base {
 		parent::registerAction('get_intro', [__CLASS__, 'getIntro']);
 		parent::registerAction('set_intro', [__CLASS__, 'setIntro']);
 		parent::registerAction('get_profile_image', [__CLASS__, 'getProfileImage']);
+		parent::registerAction('set_profile_image', [__CLASS__, 'setProfileImage']);
 	}
 
 	/**
@@ -51,20 +52,7 @@ class Member extends Base {
 			'user_url'     => $website
 		];
 		$user_id = wp_insert_user($user_args);
-		// 이미지 업데이트 (프사업로드)
-		// 이미지 업로드는 워드프레스 기본 업로더를 사용함
-		// 해상도도 알아서 나눠준다고?
-		$attachment_id = media_handle_upload('image', 0);
-		if (isset($_FILES['image']) && is_wp_error($attachment_id)) {
-			die(json_encode([
-				'success' => false,
-				'error'   => 'upload_failed', // 프론트에서 에러 핸들링 할 수 있도록 키워드로 넘겨줌
-				'message' => $attachment_id->get_error_message()
-			]));
-		} else {
-			// 유저 메타에 외래키로 사진 ID 넣기
-			update_user_meta($user_id, 'user_image', $attachment_id);
-		}
+		self::addProfileImage($user_id);
 		update_user_meta($user_id, 'user_birth', $_POST['birth']);
 		update_user_meta($user_id, 'user_nation', $_POST['nation']);
 		update_user_meta($user_id, 'user_gender', $_POST['gender']);
@@ -128,11 +116,18 @@ class Member extends Base {
 	 */
 	public static function getProfileImage() {
 		$uid = User\Utility::getCurrentUser()->ID;
-		$aid = get_user_meta($uid, 'user_image', true); // attachment id
-		$attachment_url = wp_get_attachment_image_url($aid);
+		$attachment_url = User\Utility::getUserImageUrl($uid);
 		die(json_encode([
 			'success' => true,
 			'image'   => $attachment_url
+		]));
+	}
+
+	public static function setProfileImage() {
+		$uid = User\Utility::getCurrentUser()->ID;
+		self::addProfileImage($uid);
+		die(json_encode([
+			'success' => true
 		]));
 	}
 
@@ -168,5 +163,22 @@ class Member extends Base {
 			'uid'        => $user->ID,
 			'user_login' => $user->user_login
 		];
+	}
+
+	private static function addProfileImage($uid) {
+		// 이미지 업데이트 (프사업로드)
+		// 이미지 업로드는 워드프레스 기본 업로더를 사용함
+		// 해상도도 알아서 나눠준다고?
+		$attachment_id = media_handle_upload('image', 0);
+		if (isset($_FILES['image']) && is_wp_error($attachment_id)) {
+			die(json_encode([
+				'success' => false,
+				'error'   => 'upload_failed', // 프론트에서 에러 핸들링 할 수 있도록 키워드로 넘겨줌
+				'message' => $attachment_id->get_error_message()
+			]));
+		} else {
+			// 유저 메타에 외래키로 사진 ID 넣기
+			update_user_meta($uid, 'user_image', $attachment_id);
+		}
 	}
 }
