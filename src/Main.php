@@ -11,6 +11,7 @@ class Main {
 			AJAX\Tour::init();
 			AJAX\Matching::init();
 			AJAX\Like::init();
+			AJAX\Conversation::init();
 		});
 	}
 }
