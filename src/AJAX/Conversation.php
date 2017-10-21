@@ -20,10 +20,7 @@ class Conversation extends Base {
 
         global $wpdb;
         $table_name = $wpdb->prefix . 'message';
-
-        //$wpdb->update($table_name, 1, 'read_ck', $format = null, 're_id' == $user_id AND 'se_id' == $you_id);
-        //$wpdb->query( $wpdb->prepare( "UPDATE $wpdb->$table_name SET read_ck = 1 WHERE re_id == $user_id AND se_id == $you_id);
-
+       
         $statement = <<<SQL
 UPDATE $table_name SET read_ck = 1 WHERE re_id = $user_id AND se_id = $you_id
 SQL;
@@ -68,9 +65,7 @@ SQL;
         $you_id = $_POST['other'];
 
         global $wpdb;
-        $table_name = $wpdb->prefix . 'message';
-        //$messages[] = $wpdb->get_results("SELECT * FROM $table_name WHERE (re_id = $user_id AND se_id = $you_id) OR (re_id = $you_id AND se_id = $user_id)");
-
+        $table_name = $wpdb->prefix . 'message';  
         $messages = $wpdb->get_col("SELECT mid FROM $table_name WHERE (re_id = $user_id AND se_id = $you_id) OR (re_id = $you_id AND se_id = $user_id)");
 
         date_default_timezone_set('Asia/Seoul');
