@@ -15,7 +15,7 @@ class Message {
 
 		$sql = "CREATE TABLE $table_name (
   mid mediumint(9) NOT NULL AUTO_INCREMENT,
-  time datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
+  send_Time datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
   re_id bigint(20) NOT NULL,
   se_id bigint(20) NOT NULL,  
   note longtext NOT NULL,
