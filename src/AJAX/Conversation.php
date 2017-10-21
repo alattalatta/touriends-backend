@@ -4,104 +4,108 @@ namespace Touriends\Backend\AJAX;
 
 use Touriends\Backend\User;
 
-class Matching extends Base {
-	public static function init() {
-		parent::registerAction('getMatching', [__CLASS__, 'getMatching']);
-	}
+class Conversation extends Base {
+    public static function init() {
+        parent::registerAction('readCheck', [__CLASS__, 'readCheck']);
+        parent::registerAction('sendMessage', [__CLASS__, 'sendMessage']);
+        parent::registerAction('conversation', [__CLASS__, 'conversation']);
+    }
 
-	public static function getMatching() {
-		global $wpdb;
-		$user_id = get_current_user_id();
-		$user_language = get_user_meta($user_id, 'user_language');
-		$user_theme = get_user_meta($user_id, 'user_theme', true);
-		$user_fromDate = get_user_meta($user_id, 'user_fromDate', true);
-		$user_toDate = get_user_meta($user_id, 'user_toDate', true);
+    /**
+     * 메시지 읽음 체크
+     */
+    public static function readCheck() {
+        $user_id = User\Utility::getCurrentUser()->ID; // 현재 user_id
+        $you_id = $_POST['other'];
 
-		// 현재 사용자 언어 다 가져옴
-		$clause_where = '';
-		for ($i = 0; $i < count($user_language); $i++) {
-			$lang = $user_language[$i];
-			if ($i !== 0) {
-				$clause_where .= ' OR ';
-			}
-			$clause_where .= "meta_value = '${lang}'";
-		}
+        global $wpdb;
+        $table_name = $wpdb->prefix . 'message';
 
-		$statement = <<<SQL
-SELECT DISTINCT user_id FROM $wpdb->usermeta WHERE $clause_where
+        //$wpdb->update($table_name, 1, 'read_ck', $format = null, 're_id' == $user_id AND 'se_id' == $you_id);
+        //$wpdb->query( $wpdb->prepare( "UPDATE $wpdb->$table_name SET read_ck = 1 WHERE re_id == $user_id AND se_id == $you_id);
+
+        $statement = <<<SQL
+UPDATE $table_name SET read_ck = 1 WHERE re_id = $user_id AND se_id = $you_id
 SQL;
-		$ret_language = $wpdb->get_col($statement);
 
-		date_default_timezone_set('Asia/Seoul');
-		$my_from = new \DateTime($user_fromDate); // 검색 주체
-		$my_to = new \DateTime($user_toDate);
+        $wpdb->get_col($statement);
 
-		$result = [];
-		foreach ($ret_language as $tour_id) {
-			$tour_fromDate = get_user_meta($tour_id, 'user_fromDate', true);
-			$tour_toDate = get_user_meta($tour_id, 'user_toDate', true);
+        die(json_encode([
+            'success' => true
+        ]));
+    }
 
-			# 검색될 내용
-			$your_from = new \DateTime($tour_fromDate);
-			$your_to = new \DateTime($tour_toDate);
-			$days = 0; // 겹치는 기간
+    /**
+     * 메세지 보내기(DB저장)
+     */
+    public static function sendMessage() {
+        $user_id = User\Utility::getCurrentUser()->ID; // 현재 user_id
+        // $you_id = $_POST['other'];
 
-			// 내꺼 = 검색 주체 / 네꺼 = 검색 결과
-			if ($my_from > $your_to || $your_from > $my_to) { // 안 겹침
-				continue;
-			}
+        global $wpdb;
 
-			if ($my_from > $your_from && $my_to > $your_to) { // 내꺼가 네꺼 다 감쌈
-				$days = $my_from->diff($your_to)->days + 1;
-			} else if ($your_from > $my_from && $your_to > $my_to) { // 네꺼가 내꺼 다 감쌈
-				$days = $your_from->diff($my_to)->days + 1;
-			} else if ($my_from > $your_from && $your_to > $my_to) { // 내꺼 먼저 네꺼 나중
-				$days = $my_from->diff($my_to)->days + 1;
-			} else if ($my_from < $your_from && $your_to < $my_to) { // 네꺼 먼저 내꺼 나중
-				$days = $your_from->diff($your_to)->days + 1;
-			}
-			if ($days > 0) {
-				$theme = get_user_meta($tour_id, 'user_theme', true);
-				$languages = get_user_meta($tour_id, 'user_language');
-				$comment = get_user_meta($tour_id, 'user_longIntro', true);
-				$liked = array_search($tour_id, get_user_meta($user_id, 'user_like')) !== false;
-				$image = User\Utility::getUserImageUrl($tour_id);
-				$result[] = [
-					'uid'       => intval($tour_id),
-					'theme'     => $theme,
-					'languages' => $languages,
-					'image'     => $image,
-					'comment'   => $comment,
-					'days'      => $days,
-					'liked'     => $liked
-				];
-			}
-		}
+        if (isset($_POST['submit'])) {
+            $table_name = $wpdb->prefix . 'message';
 
-		// http://php.net/manual/en/functions.anonymous.php#example-165
-		// function ($param) use ($variable) { ... }
-		usort($result, function ($a, $b) use ($user_theme) {
-			// 스케쥴 다르면 잘 맞는 사람 앞으로
-			if ($a['days'] !== $b['days']) {
-				return $a['days'] > $b['days'] ? -1 : 1;
-			}
+            $data = array(
+                're_id' => $_POST['other'],
+                'se_id' => $user_id,
+                'note' => $_POST['note'],
+                'read_ck' => 0
+            );
+            $wpdb->insert($table_name, $data);
+        }
+        die(json_encode([
+            'success' => true
+        ]));
+    }
 
-			// 둘 다 스케쥴 같은데...
-			// 테마가 둘 다 나랑 다르면 스킵
-			if ($a['theme'] !== $user_theme && $b['theme'] !== $user_theme) {
-				return 0;
-			}
+    /**
+     * 대화내용 불러오기
+     */
+    public static function conversation() {
+        $user_id = User\Utility::getCurrentUser()->ID; // 현재 user_id
+        $you_id = $_POST['other'];
 
-			// 테마가 같은 사람을 앞으로
-			if ($a['theme'] !== $b['theme']) {
-				return $a['theme'] === $user_theme ? 1 : -1;
-			}
+        global $wpdb;
+        $table_name = $wpdb->prefix . 'message';
+        //$messages[] = $wpdb->get_results("SELECT * FROM $table_name WHERE (re_id = $user_id AND se_id = $you_id) OR (re_id = $you_id AND se_id = $user_id)");
 
-			return 0;
-		});
-		die(json_encode([
-			'success'  => true,
-			'matching' => $result
-		]));
-	}
+        $messages = $wpdb->get_col("SELECT mid FROM $table_name WHERE (re_id = $user_id AND se_id = $you_id) OR (re_id = $you_id AND se_id = $user_id)");
+
+        date_default_timezone_set('Asia/Seoul');
+
+        $text = [];
+
+        foreach ($messages as $msg) {
+            $se_id = $wpdb->get_var("SELECT se_id FROM $table_name WHERE mid = $msg");
+            $time = $wpdb->get_var("SELECT sendTime FROM $table_name WHERE mid = $msg");
+            $note = $wpdb->get_var("SELECT note FROM $table_name WHERE mid = $msg");
+
+            if ($se_id == $user_id) {
+                $text[$msg] = [
+                    'time' => $time,
+                    'note' => $note,
+                    'sort' => 'right'
+                ];
+            } else {
+                $text[$msg] = [
+                    'time' => $time,
+                    'note' => $note,
+                    'sort' => 'left'
+                ];
+            }
+        }
+        
+        function cmp($a, $b) {
+            return strcmp($a["time"], $b["time"]);
+        }
+        usort($text[], "cmp");
+
+        die(json_encode([
+            'success' => true,
+            'sort' => $text,
+            'message' => $messages
+        ]));
+    }
 }
