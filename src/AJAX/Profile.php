@@ -32,7 +32,7 @@ class Profile extends Base {
             'name' => $name,
             'pwd' => $pwd,
             'email'=> $email,
-            'user_url' => $website,
+            'website' => $website,
             'birth' => $birth,
             'nation' => $nation,
             'gender' => $gender
