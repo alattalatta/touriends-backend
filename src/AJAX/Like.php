@@ -73,7 +73,7 @@ class Like extends Base {
 		$clause_keyword = '';
 		if (isset($_POST['keyword'])) {
 			$keyword = $_POST['keyword'];
-			$clause_keyword .= " AND user_login LIKE '%$keyword'";
+			$clause_keyword .= " AND user_login LIKE '%$keyword%'";
 		}
 
 		// 현재 사용자 아니고 (WHERE:1)
