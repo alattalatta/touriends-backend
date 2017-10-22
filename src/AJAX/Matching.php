@@ -2,6 +2,7 @@
 
 namespace Touriends\Backend\AJAX;
 
+use Touriends\Backend\Table;
 use Touriends\Backend\User;
 
 class Matching extends Base {
@@ -18,11 +19,12 @@ class Matching extends Base {
 		$user_toDate = get_user_meta($user_id, 'user_toDate', true);
 
 		// 현재 사용자 언어 다 가져옴
+		$is_first = true;
 		$clause_where = '';
-		for ($i = 0; $i < count($user_language); $i++) {
-			$lang = $user_language[$i];
-			if ($i !== 0) {
+		foreach ($user_language as $lang) {
+			if ($is_first) {
 				$clause_where .= ' OR ';
+				$is_first = false;
 			}
 			$clause_where .= "meta_value = '${lang}'";
 		}
@@ -61,19 +63,14 @@ SQL;
 				$days = $your_from->diff($your_to)->days + 1;
 			}
 			if ($days > 0) {
-				$theme = get_user_meta($tour_id, 'user_theme', true);
-				$languages = get_user_meta($tour_id, 'user_language');
-				$comment = get_user_meta($tour_id, 'user_longIntro', true);
-				$liked = array_search($tour_id, get_user_meta($user_id, 'user_like')) !== false;
-				$image = User\Utility::getUserImageUrl($tour_id);
 				$result[] = [
 					'uid'       => intval($tour_id),
-					'theme'     => $theme,
-					'languages' => $languages,
-					'image'     => $image,
-					'comment'   => $comment,
+					'theme'     => get_user_meta($tour_id, 'user_theme', true),
+					'languages' => get_user_meta($tour_id, 'user_language'),
+					'image'     => User\Utility::getUserImageUrl($tour_id),
+					'comment'   => get_user_meta($tour_id, 'user_longintro', true),
 					'days'      => $days,
-					'liked'     => $liked
+					'liked'     => array_search($tour_id, get_user_meta($user_id, 'user_like')) !== false
 				];
 			}
 		}

@@ -14,6 +14,7 @@ class Tour extends Base {
 		parent::registerAction('longIntro', [__CLASS__, 'longIntro']);
 		// GET
 		parent::registerAction('get_calendar', [__CLASS__, 'getCalendar']);
+		parent::registerAction('get_schedule', [__CLASS__, 'getSchedule']);
 		parent::registerAction('get_theme', [__CLASS__, 'getTheme']);
 		parent::registerAction('get_language', [__CLASS__, 'getLanguage']);
 		parent::registerAction('get_place', [__CLASS__, 'getPlace']);
@@ -41,6 +42,13 @@ class Tour extends Base {
 			'success' => true,
 			'from'    => $from,
 			'to'      => $to
+		]));
+	}
+	public static function getSchedule() {
+		$uid = User\Utility::getCurrentUser()->ID;
+		die(json_encode([
+			'success' => true,
+			'schedule' => User\Utility::getUserScheduleFormatted($uid)
 		]));
 	}
 

@@ -8,12 +8,12 @@ class Like extends Base {
 	public static function init() {
 		parent::registerAction('bookmark', [__CLASS__, 'bookmark']);
 		parent::registerAction('getBookmark', [__CLASS__, 'getBookmark']);
-		parent::registerAction('search', [__CLASS__, 'search']);
+		parent::registerAction('getCommunityList', [__CLASS__, 'getCommunityList']);
 	}
 
-	/*
-	  like 좋아요 기능 구현 -> 즐겨찾기로 생각
-	*/
+	/**
+	 * like 좋아요 기능 구현 -> 즐겨찾기로 생각
+	 */
 	public static function bookmark() {
 		$like_id = $_POST['like']; // 대상 id
 		$user_id = User\Utility::getCurrentUser()->ID; // 현재 user_id
@@ -40,14 +40,14 @@ class Like extends Base {
 			$liked_user = get_user_by('id', $lid);
 
 			$res[] = [
-				'uid'       => $lid,
+				'uid'       => intval($lid),
 				'id'        => $liked_user->user_login,
 				'age'       => User\Utility::getUserAge($lid),
 				'schedule'  => User\Utility::getUserScheduleFormatted($lid),
 				'image'     => User\Utility::getUserImageUrl($lid),
 				'theme'     => get_user_meta($lid, 'user_theme', true),
 				'languages' => get_user_meta($lid, 'user_language'),
-				'comment'   => get_user_meta($lid, 'user_longIntro', true),
+				'comment'   => get_user_meta($lid, 'user_longintro', true),
 				'liked'     => true
 			];
 		}
@@ -58,39 +58,41 @@ class Like extends Base {
 		]));
 	}
 
-	/*
-	filter 검색 기능
-	*/
-	public static function search() {
-		global $wpdb; //필요한가 ?
-		$keyword = $_POST['keyword']; // 검색어
-		$user_id = User\Utility::getCurrentUser()->ID; // 현재 user_id
-		$ret = get_user_meta($user_id, 'user_like'); // 현재의 아이디가 가지고 있는 좋아요 uid 를 가져온다
+	/**
+	 * filter 검색 기능
+	 */
+	public static function getCommunityList() {
+		global $wpdb;
+		$uid = User\Utility::getCurrentUser()->ID;
 
-		$result = []; // 검색어가 포함되어 있는 결과를 보내줄 배열
-		foreach ($ret as $comp) {
-			$userinfo = get_user_by('ID', $comp);
-			$comp_user = $userinfo->user_login; // login 아이디를 가져옴
-			if (strpos($comp_user, $keyword) !== false) { // strpos는 문자열을 검색해주는 기능이다 ex) 검색어 "lik" 이면 "like"가 존재하면 true 반환
-				$tour_id = $comp;
-				$theme = get_user_meta($tour_id, 'user_theme', true);
-				$languages = get_user_meta($tour_id, 'user_language');
-				$image = User\Utility::getUserImageUrl($tour_id);
-				$intro = get_user_meta($tour_id, 'user_intro', true);
-				$birth = get_user_meta($tour_id, 'user_birth', true);
-				$result[] = [
-					'uid'       => intval($tour_id),
-					'age'       => $birth,
-					'theme'     => $theme,
-					'languages' => $languages,
-					'image'     => $image,
-					'intro'     => $intro
-				];
-			}
+		$users_per_page = 12;
+		$page = isset($_POST['page']) ? $_POST['page'] : 0;
+		$offset = $users_per_page * $page;
+
+		// 검색 키워드 있는 경우
+		$clause_keyword = '';
+		if (isset($_POST['keyword'])) {
+			$keyword = $_POST['keyword'];
+			$clause_keyword .= " AND user_login LIKE '%$keyword'";
 		}
+
+		// 현재 사용자 아니고 (WHERE:1)
+		// user_toDate 가 지금 시간보다 이후일 때 (WHERE:2~4)
+		$statement = <<<SQL
+SELECT ID
+FROM $wpdb->users u, $wpdb->usermeta m
+WHERE
+	u.ID <> $uid AND
+	u.ID = m.user_id AND
+	m.meta_key = 'user_toDate' AND
+	CURDATE() < CONVERT(m.meta_value, DATE) $clause_keyword
+LIMIT $users_per_page OFFSET $offset
+SQL;
+		$users = $wpdb->get_col($statement);
+
 		die(json_encode([
 			'success' => true,
-			'search'  => $result
+			'users'  => $users
 		]));
 	}
 }
