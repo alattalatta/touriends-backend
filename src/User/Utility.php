@@ -22,4 +22,18 @@ class Utility {
 		$aid = get_user_meta($uid, 'user_image', true); // attachment id
 		return wp_get_attachment_image_url($aid);
 	}
+
+	public static function getUserAge($uid): int {
+		$birth = substr(get_user_meta($uid, 'user_birth', true), 0, 4); // 연도 부분만
+		$now = (new \DateTime())->format('Y'); // new \DateTime()->format('Y')인데... PHP 븅신
+		return $now - $birth;
+	}
+
+	public static function getUserScheduleFormatted($uid): string {
+		$schedule_from = str_replace('-', '/',
+			get_user_meta($uid, 'user_fromDate', true)); // 1994/09/12
+		$schedule_to = str_replace('-', '/',
+			substr(get_user_meta($uid, 'user_toDate', true), 5)); // 09/12
+		return "$schedule_from - $schedule_to";
+	}
 }
