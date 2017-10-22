@@ -38,24 +38,23 @@ class Like extends Base {
 		$res = [];
 		foreach ($ret_like as $lid) {
 			$liked_user = get_user_by('id', $lid);
-			$age = User\Utility::getUserAge($lid);
-			$schedule = User\Utility::getUserScheduleFormatted($lid);
 
 			$res[] = [
-				'uid' => $lid,
-				'id' => $liked_user->user_login,
-				'age' => $age,
-				'schedule' => $schedule,
-				'theme' => get_user_meta($lid, 'user_theme', true),
+				'uid'       => $lid,
+				'id'        => $liked_user->user_login,
+				'age'       => User\Utility::getUserAge($lid),
+				'schedule'  => User\Utility::getUserScheduleFormatted($lid),
+				'image'     => User\Utility::getUserImageUrl($lid),
+				'theme'     => get_user_meta($lid, 'user_theme', true),
 				'languages' => get_user_meta($lid, 'user_language'),
-				'comment' => get_user_meta($lid, 'user_longIntro', true),
-				'liked' => true
+				'comment'   => get_user_meta($lid, 'user_longIntro', true),
+				'liked'     => true
 			];
 		}
 
 		die(json_encode([
 			'success' => true,
-			'liked'    => $res
+			'liked'   => $res
 		]));
 	}
 
