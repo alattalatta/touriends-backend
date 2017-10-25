@@ -18,7 +18,10 @@ class Testsj extends Base {
 					'url'    => $b,
 					'addr' => $c
 		));
-        
+        	$rrr.push(array('title'   => "Gyeongbokgung",
+				'url'    => "http://korean.visitseoul.net/comm/getImage?srvcId=MEDIA&parentSn=167&fileTy=MEDIA&fileNo=1&thumbTy=L",
+				'addr' => "Jongno")
+			 );
         die(json_encode([
             'success'  => true,
             'data' => $rrr
