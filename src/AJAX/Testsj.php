@@ -16,12 +16,12 @@ class Testsj extends Base {
         	$rrr = [
 					'title'   => $a,
 					'url'    => $b,
-					'adr' => $c,
+					'addr' => $c
 			];
         
         die(json_encode([
             'success'  => true,
-            'data' => $rrr,
+            'data' => $rrr
             ]));
         }
 }
