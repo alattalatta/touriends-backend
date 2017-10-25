@@ -13,11 +13,11 @@ class Testsj extends Base {
         $c = "ad";
        
         
-        	$rrr = array(
+        	$rrr = array(array(
 					'title'   => $a,
 					'url'    => $b,
 					'addr' => $c
-		);
+		));
         
         die(json_encode([
             'success'  => true,
