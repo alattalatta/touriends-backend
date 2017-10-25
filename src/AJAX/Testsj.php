@@ -25,4 +25,3 @@ class Testsj extends Base {
             ]));
         }
 }
-}
