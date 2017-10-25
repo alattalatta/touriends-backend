@@ -7,15 +7,21 @@ class Testsj extends Base {
         parent::registerAction('testsj', [__CLASS__, 'testsj']);
     }
     public static function testsj() {
-        
+       
         $a = "타이틀";
         $b = "https://search.pstatic.net/common/?src=http%3A%2F%2Fldb.phinf.naver.net%2F20150831_194%2F1440997727456lEljl_GIF%2F11571707_0.gif&type=l&size=3072x1512&quality=95&autoRotate=true";
         $c = "ad";
+       
+        
+        	$rrr = [
+					'title'   => $a,
+					'url'    => $b,
+					'adr' => $c,
+			];
+        
         die(json_encode([
             'success'  => true,
-            'title' => $a,
-            'url' => $b,
-            'ad' => $c
-        ]));
+            'data' => $rrr,
+            ]));
         }
 }
