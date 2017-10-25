@@ -12,7 +12,7 @@ class Main {
 			AJAX\Matching::init();
 			AJAX\Like::init();
 			AJAX\Conversation::init();
-			AJAX\Test::init();
+			AJAX\Testsj::init();
 		});
 	}
 }
