@@ -18,7 +18,7 @@ class Testsj extends Base {
 					'url'    => $b,
 					'addr' => $c
 		));
-        	$rrr.push(array('title'   => "Gyeongbokgung",
+        	array_push($rrr, array('title'   => "Gyeongbokgung",
 				'url'    => "http://korean.visitseoul.net/comm/getImage?srvcId=MEDIA&parentSn=167&fileTy=MEDIA&fileNo=1&thumbTy=L",
 				'addr' => "Jongno")
 			 );
