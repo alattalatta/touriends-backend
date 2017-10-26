@@ -12,6 +12,7 @@ class Main {
 			AJAX\Matching::init();
 			AJAX\Like::init();
 			AJAX\Conversation::init();
+			AJAX\Messagebox::init();
 			AJAX\Guid::init();
 		});
 	}
