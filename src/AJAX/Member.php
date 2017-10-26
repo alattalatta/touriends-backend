@@ -10,16 +10,16 @@ class Member extends Base {
 		parent::registerAction('login', [__CLASS__, 'login']);
 		parent::registerAction('logout', [__CLASS__, 'logout']);
 		parent::registerAction('disconnect', [__CLASS__, 'disconnect']);
-		// 개인정보 GET/SET
+		// 회원 가입 및 소개 GET/SET
 		parent::registerAction('register', [__CLASS__, 'register']);
-		parent::registerAction('get_intro', [__CLASS__, 'getIntro']);
+		parent::registerAction('get_intro', [__CLASS__, 'getIntro']); -
 		parent::registerAction('set_intro', [__CLASS__, 'setIntro']);
+		//이미지 받아오기 GET/SET
 		parent::registerAction('get_profile_image', [__CLASS__, 'getProfileImage']);
 		parent::registerAction('set_profile_image', [__CLASS__, 'setProfileImage']);
+		//프로필 변경
 		parent::registerAction('getEdit', [__CLASS__, 'getEdit']);
 		parent::registerAction('setEdit', [__CLASS__, 'setEdit']);
-		parent::registerAction('fileIntro', [__CLASS__, 'fileIntro']);
-		parent::registerAction('editIntro', [__CLASS__, 'editIntro']);
 	}
 
 	/**
@@ -136,7 +136,7 @@ class Member extends Base {
 
 	/**
 	 * 로그인/가입 공용 Sign in 메소드
-	 * 
+	 *
 	 * @param string $login ID
 	 * @param string $pwd Password
 	 *
@@ -247,28 +247,4 @@ class Member extends Base {
 			]));
 
 	}
-/**
-* 자기소개 넘겨주기
-*/
-public static function fileIntro() {
-	 $uid = User\Utility::getCurrentUser()->ID;
-	 $intro = get_user_meta($uid, 'user_intro', true);
-	 die(json_encode([
-			 'success' => true,
-			 'intro'   => $intro
-	 ]));
-}
-
-/**
-* 변경된 자기소개 저장
-*/
-public static function editIntro() {
-	 $intro = $_POST['intro'];
-	 $uid = User\Utility::getCurrentUser()->ID;
-	 update_user_meta($uid, 'user_intro', $intro);
-	 die(json_encode([
-			 'success' => true,
-			 'intro' => $intro
-	 ]));
-}
 }
