@@ -255,15 +255,16 @@ class Member extends Base {
 
         public static function otherInfo() {
 
-    	    	    $other = $_POST['other']; // 다른 사용자 uid
+		 $other = $_POST['other']; // 다른 사용자 uid
 
-    	   	    $other_name = get_user_by('name', $other);
-     		    $other_image = get_user_meta($other, 'user_image', true);
-		
-        	    die(json_encode([
-					'success' => true,
-					'other_name'  => $other_name,
-					'other_image' => $other_image
-			]));
-   	}
+		 $otherinfo = get_user_by('ID',$other);
+		 $other_name = $otherinfo->user_login;
+		 $other_image = $otherinfo->user_image;
+
+		 die(json_encode([
+		  'success' => true,
+		  'other_name'  => $other_name,
+		  'other_image' => $other_image
+		]));
+	}
 }
