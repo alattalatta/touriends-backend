@@ -48,7 +48,7 @@ class Guid extends Base {
     public static function defaultInfo(int $content, int $area){
 
         $key = "ZdRsNK%2BUuytOnBip1bcGNL1P5pvkIQQQ3cJfcNlSgGEx%2BI6A8AftgREL7JZFmmi%2FyQZS3XY4irLiNc5BS%2FXIKA%3D%3D";
-        $url = "http://api.visitkorea.or.kr/openapi/service/rest/KorService/areaBasedList";
+        $url = "http://api.visitkorea.or.kr/openapi/service/rest/EngService/areaBasedList";
         $url .= "?ServiceKey=".$key;
         $url .= "&cat1=A02";
         $url .= "&contentTypeId=". $content;
