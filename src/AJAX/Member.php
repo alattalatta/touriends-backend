@@ -20,6 +20,7 @@ class Member extends Base {
 		//프로필 변경
 		parent::registerAction('getEdit', [__CLASS__, 'getEdit']);
 		parent::registerAction('setEdit', [__CLASS__, 'setEdit']);
+		parent::registerAction('otherInfo', [__CLASS__, 'otherInfo']);
 	}
 
 	/**
@@ -247,4 +248,22 @@ class Member extends Base {
 			]));
 
 	}
+	
+	    /************************************************다른 사용자 정보 가저오기******************************************/
+
+    // uid _ 사용자 이름, 이미지
+
+        public static function otherInfo() {
+
+    	    	    $other = $_POST['other']; // 다른 사용자 uid
+
+    	   	    $other_name = get_user_by('name', $other);
+     		    $other_image = get_user_meta($other, 'user_image', true);
+		
+        	    die(json_encode([
+					'success' => true,
+					'other_name'  => $other_name,
+					'other_image' => $other_image
+			]));
+   	}
 }
