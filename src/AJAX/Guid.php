@@ -18,7 +18,7 @@ class Guid extends Base {
      * content = 2 이면 문화 전체 조회(서울 강남구 기본값)
      * content = 3 이면 축제 전체 조회(서울 강남구 기본값)
      */
-    public static function tourInfo() {
+    public static function tour_Info() {
 
         $content = $_POST['content'];
         $area = $_POST['area'];
