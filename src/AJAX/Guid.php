@@ -19,21 +19,21 @@ class Guid extends Base {
         $data2 = null;
         if ($content == 0)
         {
-            $data  = self::defaultInfo(12, $area);
-            $data1 = self::defaultInfo(14, $area);
-            $data2 = self::defaultInfo(15, $area);
+            $data  = self::defaultInfo(76, $area);
+            $data1 = self::defaultInfo(78, $area);
+            $data2 = self::defaultInfo(85, $area);
         }
 
         else if($content == 1){
-            $data = self::defaultInfo(12, $area);
+            $data = self::defaultInfo(76, $area);
         }
 
         else if($content == 2){
-            $data = self::defaultInfo(14, $area);
+            $data = self::defaultInfo(78, $area);
         }
 
         else if($content == 3){
-            $data = self::defaultInfo(15, $area);
+            $data = self::defaultInfo(85, $area);
         }
 
         die(json_encode([
