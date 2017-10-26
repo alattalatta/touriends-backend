@@ -258,8 +258,9 @@ class Member extends Base {
 		 $other = $_POST['other']; // 다른 사용자 uid
 
 		 $otherinfo = get_user_by('ID',$other);
+		 $other_image =  get_user_meta($other, 'user_image', true);
 		 $other_name = $otherinfo->user_login;
-		 $other_image = $otherinfo->user_url;
+		// $other_image = $otherinfo->user_url;
 
 		 die(json_encode([
 		  'success' => true,
