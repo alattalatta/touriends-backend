@@ -49,9 +49,7 @@ SQL;
       ];
     }
     die(json_encode([
-      'success' =>  true,
-      'message_re' =>  $messages_re,
-      'message_se' =>  $messages_se,
+      'success'    =>  true,
       'box'        =>  $box
     ]));
   }
