@@ -73,10 +73,11 @@ class Guid extends Base {
     public static function detail_Info() {
 
         $contentId = $_POST['contentId']; // 1118680 : test
-
+        $content = $_POST['content'];
         $key = "ZdRsNK%2BUuytOnBip1bcGNL1P5pvkIQQQ3cJfcNlSgGEx%2BI6A8AftgREL7JZFmmi%2FyQZS3XY4irLiNc5BS%2FXIKA%3D%3D";
         $url = "http://api.visitkorea.or.kr/openapi/service/rest/EngService/detailIntro";
         $url .= "?ServiceKey=" . $key;
+        $url .= "&contentTypeId=" . $content;
         $url .= "&contentId=" . $contentId;
         $url .= "&MobileApp=AppTest";
         $url .= "&MobileOS=ETC";
