@@ -78,11 +78,9 @@ class Guid extends Base {
         $url = "http://api.visitkorea.or.kr/openapi/service/rest/EngService/detailIntro";
         $url .= "?ServiceKey=" . $key;
         $url .= "&contentId=" . $contentId;
-        $url .= "&pageNo=1";
-        $url .= "&numOfRows=1";
         $url .= "&MobileApp=AppTest";
         $url .= "&MobileOS=ETC";
-        $url .= "&arrange=A";
+        $url .= "&introYN=Y";
         $response = file_get_contents($url);
         $xml = simplexml_load_string($response) or die("Error: Cannot create object");
         $detail = $xml->body->items;
