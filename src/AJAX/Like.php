@@ -76,16 +76,13 @@ class Like extends Base {
 			$clause_keyword .= " AND user_login LIKE '%$keyword%'";
 		}
 
-		// 현재 사용자 아니고 (WHERE:1)
-		// user_toDate 가 지금 시간보다 이후일 때 (WHERE:2~4)
+		// 현재 사용자 아님 (WHERE:1)
+		// 원래 있던 ~~이후 조건은 샘플이 너무 적어져서 제외
 		$statement = <<<SQL
 SELECT ID
-FROM $wpdb->users u, $wpdb->usermeta m
+FROM $wpdb->users u
 WHERE
-	u.ID <> $uid AND
-	u.ID = m.user_id AND
-	m.meta_key = 'user_toDate' AND
-	CURDATE() < CONVERT(m.meta_value, DATE) $clause_keyword
+	u.ID <> $uid $clause_keyword
 LIMIT $users_per_page OFFSET $offset
 SQL;
 		$users = $wpdb->get_col($statement);

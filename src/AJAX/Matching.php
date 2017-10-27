@@ -2,7 +2,6 @@
 
 namespace Touriends\Backend\AJAX;
 
-use Touriends\Backend\Table;
 use Touriends\Backend\User;
 
 class Matching extends Base {
@@ -23,8 +22,10 @@ class Matching extends Base {
 		$clause_where = '';
 		foreach ($user_language as $lang) {
 			if ($is_first) {
-				$clause_where .= ' OR ';
 				$is_first = false;
+			}
+			else {
+				$clause_where .= ' OR ';
 			}
 			$clause_where .= "meta_value = '${lang}'";
 		}
