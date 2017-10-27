@@ -16,7 +16,7 @@ class Messagebox extends Base {
         $user_id = User\Utility::getCurrentUser()->ID;//현재user_id
         $table_name = $wpdb->prefix . 'message';
         $statement = <<<SQL
-    select b.* from( select max(mid) as mid, read_ck, re_id as 'who', 0 as 'test' from (select * from  $table_name where se_id=$user_id order by mid desc) a group by re_id UNION select max(mid) as mid, read_ck, se_id as 'who', 1 as 'test' from (select * from  $table_name where re_id=$user_id order by mid desc) a group by se_id ORDER BY `mid` DESC) b group by who
+    select b.* from( select max(mid) as mid, read_ck, re_id as 'other', 0 as 'test' from (select * from  $table_name where se_id=$user_id order by mid desc) a group by re_id UNION select max(mid) as mid, read_ck, se_id as 'other', 1 as 'test' from (select * from  $table_name where re_id=$user_id order by mid desc) a group by se_id ORDER BY `mid` DESC) b group by other
 SQL;
         $messagebox = $wpdb->get_results($statement); //나랑 대화 나눈 사람 ... 대화 번호/읽음여부/상대아이디/내가받은건지 테이블생성
 
