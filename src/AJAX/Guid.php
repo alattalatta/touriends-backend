@@ -108,6 +108,7 @@ class Guid extends Base {
         $url .= "&MobileApp=AppTest";
         $url .= "&MobileOS=ETC";
         $url .= "&arrange=A";
+        $url .= "&defaultYN=Y";
         $url .= "&firstImageYN=Y";
         $url .= "&areacodeYN=Y";
         $url .= "&addrinfoYN=Y";
