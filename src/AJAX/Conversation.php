@@ -6,7 +6,7 @@ use Touriends\Backend\User;
 
 class Conversation extends Base {
 	public static function init() {
-		parent::registerAction('readCheck', [__CLASS__, 'readCheck']);
+		parent::registerAction('read_check', [__CLASS__, 'read_check']);
 		parent::registerAction('sendMessage', [__CLASS__, 'sendMessage']);
 		parent::registerAction('getConversation', [__CLASS__, 'getConversation']);
 	}
@@ -14,7 +14,7 @@ class Conversation extends Base {
 	/**
 	 * 메시지 읽음 체크
 	 */
-	public static function readCheck() {
+	public static function read_check() {
 		$user_id = User\Utility::getCurrentUser()->ID; // 현재 user_id
 		$you_id = $_POST['other'];
 
