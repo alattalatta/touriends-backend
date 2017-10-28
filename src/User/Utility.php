@@ -36,4 +36,8 @@ class Utility {
 			substr(get_user_meta($uid, 'user_toDate', true), 5)); // 09/12
 		return "$schedule_from - $schedule_to";
 	}
+
+	public static function getUserLiked($uid, $target_uid): bool {
+		return array_search($target_uid, get_user_meta($uid, 'user_like')) !== false;
+	}
 }

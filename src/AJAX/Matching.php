@@ -11,7 +11,7 @@ class Matching extends Base {
 
 	public static function getMatching() {
 		global $wpdb;
-		$user_id = get_current_user_id();
+		$user_id = User\Utility::getCurrentUser()->ID;
 		$user_language = get_user_meta($user_id, 'user_language');
 		$user_theme = get_user_meta($user_id, 'user_theme', true);
 		$user_fromDate = get_user_meta($user_id, 'user_fromDate', true);
@@ -97,6 +97,8 @@ SQL;
 
 			return 0;
 		});
+		update_user_meta($user_id, 'matched', true);
+
 		die(json_encode([
 			'success'  => true,
 			'matching' => $result
