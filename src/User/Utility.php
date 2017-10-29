@@ -12,7 +12,8 @@ class Utility {
 		if ($user->ID === 0) {
 			die(json_encode([
 				'success' => false,
-				'error' => 'no_login'
+				'error' => 'no_login',
+				'context' => 'getCurrentUser'
 			]));
 		}
 		return $user;
