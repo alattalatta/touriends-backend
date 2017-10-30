@@ -79,9 +79,24 @@ class Member extends Base {
 	 * 탈퇴
 	 */
 	public static function disconnect() {
+		global $wpdb;
 		$uid = User\Utility::getCurrentUser()->ID;
 		wp_logout();
-		self::deleteProfileImage($uid);
+		$attachment_id = get_user_meta($uid, 'user_image', true);
+		$table_name = $wpdb->prefix . 'message';
+		$sql = <<<SQL
+		DELETE from $table_name WHERE se_id = $uid OR re_id = $uid;
+SQL;
+		$wpdb->query($sql);
+		//delete_user_meta(none, 'user_like', $uid);
+		$statement = <<<SQL
+		DELETE FROM $wpdb->usermeta WHERE meta_key = 'user_like' and meta_value = $uid;
+SQL;
+		$wpdb->query($statement);
+		if ($attachment_id) {
+			wp_delete_attachment($attachment_id, true);
+		}
+		$wpdb->query($sql);
 		wp_delete_user($uid);
 		die(json_encode([
 			'success' => true
