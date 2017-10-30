@@ -87,9 +87,11 @@ class Member extends Base {
 		DELETE from $table_name WHERE se_id = $uid OR re_id = $uid;
 SQL;
 		$wpdb->query($sql);
+		//delete_user_meta(none, 'user_like', $uid);
 		$statement = <<<SQL
-		DELETE FROM wp_
+		DELETE FROM $wpdb->usermeta WHERE meta_key = 'user_like' and meta_value = $uid;
 SQL;
+		$wpdb->query($statement);
 		if ($attachment_id) {
 			wp_delete_attachment($attachment_id, true);
 		}
