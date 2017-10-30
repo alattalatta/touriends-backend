@@ -21,17 +21,21 @@ SQL;
 		$messagebox = $wpdb->get_results($statement); //나랑 대화 나눈 사람 ... 대화 번호/읽음여부/상대아이디/내가받은건지 테이블생성
 
 		foreach ($messagebox as $msb) {
-			if ($msb->test == 1) {
-				$not_new = $msb->read_ck;
-
-				$newck[] = [
-					'newmsg' => $not_new
-				];
-			} else {
-				$newck[] = [
-					'newmsg' => '0'
-				];
+		    if ($msb->test == 1) {
+			if($msb->read_ck == '1') {
+			    $not_new = '0';
 			}
+			else {
+			    $not_new = '1';
+			}
+			$newck[] = [
+			    'newmsg' => $not_new
+			];
+		    } else {
+			$newck[] = [
+			    'newmsg' => '0'
+			];
+		    }
 		}
 		die(json_encode([
 			'success' => true,
