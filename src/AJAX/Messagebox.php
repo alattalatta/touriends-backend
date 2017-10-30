@@ -16,25 +16,21 @@ class Messagebox extends Base {
         $user_id = User\Utility::getCurrentUser()->ID;//현재user_id
         $table_name = $wpdb->prefix . 'message';
         $statement = <<<SQL
-select b.* from( select max(mid) as mid, a.read_ck, re_id as 'other', 0 as 'test' from (select * from $table_name where se_id=$user_id order by mid desc) a group by a.re_id UNION select max(mid) as mid, a.read_ck, se_id as 'other', 1 as 'test' from (select * from $table_name where re_id=$user_id order by mid desc) a group by a.se_id ORDER BY `mid` DESC ) b group by b.other ORDER BY b.mid DESC
+select b.* from( select max(mid) as mid, re_id as 'other' from (select * from $table_name where se_id=$user_id order by mid desc) a group by a.re_id UNION select max(mid) as mid, se_id as 'other'from (select * from $table_name where re_id=$user_id order by mid desc) a group by a.se_id ORDER BY `mid` DESC ) b group by b.other ORDER BY b.mid DESC
 SQL;
         $messagebox = $wpdb->get_results($statement); //나랑 대화 나눈 사람 ... 대화 번호/읽음여부/상대아이디/내가받은건지 테이블생성
 
-        foreach ($messagebox as $msb) {
-            if ($msb->test == 1) {
-                if($msb->read_ck == '1') {
-                    $not_new = '0';
-                }
-                else {
-                    $not_new = '1';
-                }
-                $newck[] = [
-                    'newmsg' => $not_new
-                ];
-            } else {
-                $newck[] = [
-                    'newmsg' => '0'
-                ];
+        $statement = <<<SQL
+select max(mid) as mid, read_ck from wp_message where re_id = $user_id group by se_id
+SQL;
+        $readcheck = $wpdb->get_results($statement);
+
+        $newck = [];
+        
+        foreach ($readcheck as $msb) {
+            if ($msb->read_ck == 0) {
+                $new_ck = $msb->mid;
+                $newck[] = $new_ck;
             }
         }
         die(json_encode([
