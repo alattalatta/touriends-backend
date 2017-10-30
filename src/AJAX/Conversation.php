@@ -43,7 +43,7 @@ SQL;
 		$data = [
 			're_id'   => $_POST['other'],
 			'se_id'   => $user_id,
-			'note'    => $_POST['note'],
+			'note'    => htmlspecialchars($_POST['note']),
 			'read_ck' => 0
 		];
 		$wpdb->insert($table_name, $data);
@@ -74,7 +74,7 @@ SQL;
 
 		die(json_encode([
 			'success'  => true,
-			'messages' => $messages
+			'messages' => stripslashes_deep($messages)
 		]));
 	}
 }
