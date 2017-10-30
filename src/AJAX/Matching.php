@@ -7,8 +7,17 @@ use Touriends\Backend\User;
 class Matching extends Base {
 	public static function init() {
 		parent::registerAction('getMatching', [__CLASS__, 'getMatching']);
+        parent::registerAction('matchCheck', [__CLASS__, 'matchCheck']);
 	}
+    public static function matchCheck() {
+        $user_id = User\Utility::getCurrentUser()->ID;
+        $match_ck= get_user_meta($user_id, 'user_match', true);
 
+        die(json_encode([
+            'success'  => true,
+            'matching' => $match_ck
+        ]));
+    }
 	public static function getMatching() {
 		global $wpdb;
 		$user_id = User\Utility::getCurrentUser()->ID;
@@ -16,7 +25,7 @@ class Matching extends Base {
 		$user_theme = get_user_meta($user_id, 'user_theme', true);
 		$user_fromDate = get_user_meta($user_id, 'user_fromDate', true);
 		$user_toDate = get_user_meta($user_id, 'user_toDate', true);
-
+        $user_nation = get_user_meta($user_id, 'user_nation',true);
 		// 현재 사용자 언어 다 가져옴
 		$is_first = true;
 		$clause_where = '';
@@ -41,6 +50,11 @@ SQL;
 
 		$result = [];
 		foreach ($ret_language as $tour_id) {
+            $tour_nation = get_user_meta($tour_id, 'user_nation', true);
+            if ($user_nation == $tour_nation)
+            {
+                continue;
+            }
 			$tour_fromDate = get_user_meta($tour_id, 'user_fromDate', true);
 			$tour_toDate = get_user_meta($tour_id, 'user_toDate', true);
 
