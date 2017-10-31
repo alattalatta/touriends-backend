@@ -8,9 +8,22 @@ class Matching extends Base {
 	public static function init() {
 		parent::registerAction('getMatching', [__CLASS__, 'getMatching']);
         parent::registerAction('matchCheck', [__CLASS__, 'matchCheck']);
+        parent::registerAction('matchCheckSend', [__CLASS__, 'matchCheckSend']);
 	}
+    public static function matchCheckSend() {
+        $user_id = User\Utility::getCurrentUser()->ID;
+
+        $matching = $_POST['matching'];
+        update_user_meta($user_id, 'user_match', $matching);
+
+        die(json_encode([
+            'success'  => true,
+            'matching' => $matching
+        ]));
+    }
     public static function matchCheck() {
         $user_id = User\Utility::getCurrentUser()->ID;
+        //$match_ck= get_user_meta($user_id, 'user_match', true);
         $match_ck= get_user_meta($user_id, 'user_match', true);
 
         die(json_encode([
