@@ -122,7 +122,7 @@ class Tour extends Base {
 		$long = $_POST['longIntro'];
 		$user_id = User\Utility::getCurrentUser()->ID;
 		update_user_meta($user_id, 'user_longintro', $long);
-        update_user_meta($user_id, 'user_match', 1);
+        	update_user_meta($user_id, 'user_match', 1);
         
 		die(json_encode([
 			'success' => true
